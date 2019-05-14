@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- AngularJs script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-resource.min.js"></script>
+
+<!-- ... -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() { $('body').bootstrapMaterialDesign(); });
+
+
+    var app = angular.module('NoteApp', ['ngResource']);
+
+    app.factory('qweQwe', function() {
+        return {
+            foo: function(message) {
+                {#myEl = angular.element(document.querySelector('.system-messages'));#}
+                {#myEl.text('This is text.');#}
+                {#alert("I'm foo!");#}
+            }
+        };
+    });
+
+    app.factory('UserFactory', function($resource) {
+        {#var url = '/auth/token/api/';#}
+        var url = "/api/user/";
+        return $resource(url,
+            {},
+            {
+                post: {
+                    method: "POST",
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                put: {
+                    url: "/api/user/",
+                    method: "PUT",
+                    params: {},
+                    isArray: false,
+                    cache:false
+                }
+            },
+            {stripTrailingSlashes: false}
+        )
+     });
+
+
+    app.controller('AuthenticationController',
+    ['$scope', '$http', '$window', 'qweQwe', '$resource', 'UserFactory',
+    function($scope, $http, $window, qweQwe, $resource, UserFactory) {
+        qweQwe.foo();
+
+        $http.defaults.headers.common['Authorization'] = $window.localStorage['jwt_token'];
+        $http.defaults.headers.post['Content-Type'] = 'application/json';
+        $http.defaults.xsrfCookieName = 'csrftoken';
+        $http.defaults.xsrfHeaderName = 'X-CSRFToken';
+        // logged in user
+        $scope.loggedInUser = $window.localStorage.getItem('username') || '';
+        // oauth api
+        $scope.checkIfLogedIn = function() {
+            return localStorage.getItem('jwt_token')
+        };
+        $scope.authSignUp = function(authUsername, authPassword) {
+            if (authUsername && authPassword) {
+                var data = {
+                    "username": authUsername,
+                    "password": authPassword
+                };
+                UserFactory.put(data)
+                    .$promise.then(function(response) {
+                        $http.defaults.headers.common['Authorization'] = 'JWT ' + response.token;
+                        $window.localStorage['jwt_token'] = 'Token ' + response.token;
+                        $window.localStorage['username'] = authUsername;
+                        $scope.loggedInUser = authUsername;
+                        $window.location.reload();
+                        alert('Your account successfully created, you can login.')
+                    }, function (error) {
+                        $http.defaults.headers.common['Authorization'] = '';
+                        $window.localStorage.removeItem('jwt_token');
+                        $window.localStorage.removeItem('username');
+                        $scope.loggedInUser = '';
+                    })
+            }
+         };
+
+        $scope.authLogin = function(authUsername, authPassword) {
+            if (authUsername && authPassword) {
+                var data = {
+                    "username": authUsername,
+                    "password": authPassword
+                };
+                UserFactory.post(data)
+                    .$promise.then(function(response) {
+                        $http.defaults.headers.common['Authorization'] = 'Token ' + response.token;
+                        $window.localStorage['jwt_token'] = 'Token ' + response.token;
+                        $window.localStorage['username'] = authUsername;
+                        $scope.loggedInUser = authUsername;
+                        $window.location.reload();
+                    }, function (error) {
+                        $http.defaults.headers.common['Authorization'] = '';
+                        $window.localStorage.removeItem('jwt_token');
+                        $window.localStorage.removeItem('username');
+                        $scope.loggedInUser = '';
+                    })
+            }
+        };
+        $scope.authLogout = function() {
+            $window.localStorage.removeItem('jwt_token');
+            $window.localStorage.removeItem('username');
+            $scope.loggedInUser = ''
+            $window.location.reload();
+        };
+
+        $scope.SignUpFormIsHidden = true
+    }]);
+
+    app.controller('NotebookController',
+    ['$scope', '$http', '$window', '$resource', '$filter',
+    function($scope, $http, $window, $resource, $filter) {
+        var Library = $resource(
+            '/api/library/',
+            {},
+            {
+                'get': {
+                    method: "GET",
+                    params: {},
+                    isArray: false,
+                    cache:false
+                }
+            },
+            {stripTrailingSlashes: false}
+        );
+        $scope.library = '';
+        Library
+            .query()
+            .$promise.then(
+                function(response) {
+                    $scope.library = response[0];
+                }, function(error) {
+                    {#console.log(error)#}
+                }
+            );
+        var Notebook = $resource(
+            '/api/notebooks/',
+            {},
+            {
+                get: {
+                    method: "GET",
+                    params: {},
+                    isArray: true,
+                    cache:false
+                },
+                put: {
+                    method: 'PUT',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                patch: {
+                    method: 'PATCH',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                delete: {
+                    url: '/api/notebooks/:id/',
+                    {#url: '/api/points/',#}
+                    method: 'DELETE',
+                    {#params: {id:'@id'},#}
+                    params: {
+                            {#action: "delete"#}
+                        },
+                    data: {
+                        id: '@id'
+                    },
+                    {#data: {id:'@id'},#}
+                    isArray: false,
+                    cache:false
+                }
+            },
+            {stripTrailingSlashes: false}
+        );
+
+        $scope.notebooksList = [];
+        Notebook.query().$promise.then(
+            function(response) {
+                $scope.notebooksList = response;
+                getCurentNotebookIndex()
+            }, function(error) {
+                {#console.log(error)#}
+            }
+        );
+
+        function getCurentNotebookIndex() {
+            {#const notebook_index = $scope.notebooksList.findIndex(p => p.id === $scope.curent_notebook_id);#}
+            const notebook_index = $scope.notebooksList.findIndex(p => p.id == notebook_id);
+            $scope.curent_notebook_index = notebook_index
+        }
+
+        $scope.notebook_title_input = [] // we must defin it before work
+
+        $scope.createNotebook = function() {
+            Notebook
+                .put({library_id:$scope.library.id})
+                .$promise.then(
+                    function(response) {
+                        $scope.notebooksList.push(response)
+
+                        angular.forEach($scope.notebooksList, function(notebook) {
+                            if (!$scope.notebook_title_input[notebook.id]) {
+                                // create point_title_input dict
+                                $scope.notebook_title_input[notebook.id] = []
+                            }
+                        });
+                    },
+                    function(error) {
+                        {#console.log('error createNotebook =' + error)#}
+                    }
+                )
+        };
+        $scope.editNotebook = function(index, notebook_id, action) {
+            var title = $scope.notebook_title_input[notebook_id]
+            Notebook
+                .patch({id:notebook_id, title:title})
+                .$promise.then(
+                    function(response) {
+                        {#console.log(' editNotebook patch success = ' + JSON.stringify(response));#}
+                        $scope.notebooksList[$scope.curent_notebook_index].title = response.title
+                        {#$scope.notebooksList[$scope.curent_notebook_index].title = response.title#}
+                    },
+                    function(error) {
+                        {#console.log(' editNotebook patch error =' + JSON.stringify(error))#}
+                    }
+                )
+        };
+        $scope.deleteNotebook = function(index, notebook_id) {
+            Notebook
+                .delete({id:notebook_id})
+                .$promise.then(
+                    function(response) {
+                        if (response.is_deleted === true) {
+                            $scope.notebooksList[$scope.curent_notebook_index].is_deleted = response['is_deleted'];
+                        }
+                    }, function(error) {
+                        {#console.log(' deleteNotebook error = ' + JSON.stringify(error))#}
+                    }
+                );
+        }
+
+        $(function() {
+            $('#collapse-search').on('hidden.bs.collapse', function() {
+              $('#search').val('')
+            })
+          });
+
+    }])
+
+</script>
+
+<style>
+:root {
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #fff;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #007bff;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+
+    body {
+       text-color: purple;
+    }
+
+    container {
+        width: 100%;
+    }
+{# change bootstrap style #}
+    .bmd-form-group {
+        bmd-form-group: none
+    }
+{# global style #}
+    .deleted {
+        border: 2px solid double red;
+    }
+    .crossed {
+        {#text-decoration: line-through double red;#}
+        text-decoration: line-through red;
+    }
+
+
+    .header_navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+        .header_navbar_logo {
+            padding:0
+        }
+            .header_navbar_logo_img {
+                height:110px;
+                padding:5px;
+            }
+    .header_navbar_auth { }
+        .header_navbar_auth_logged {}
+            .header_navbar_auth_logged_txt {
+                width: 190px;
+                display: inline-block;
+                height: 90px;
+                padding-top:10px;
+            }
+            .header_navbar_auth_logged_logout_btn {
+                display: inline-block;
+                margin-top:-50px;
+                margin-left: 5px;
+                height: 90px;
+                width: 50px;
+            }
+                .header_navbar_auth_logged_logout_btn p {
+                    margin-top: -35px;
+                    transform: rotate(90deg) scaleY(1.5);
+                    font-size: 14pt;
+                    font-weight: 300;
+                }
+        .header_navbar_auth_anon {}
+            .header_navbar_auth_anon_signup_btn {
+                display: inline-block;
+                background-color: #FFFFFF;
+                border-width:2px;
+                margin-top:-35px;
+                margin-right:5px;
+                height: 90px;
+                width: 50px;
+            }
+                .header_navbar_auth_anon_signup_btn_f_txt {
+                    transform: rotate(90deg) scaleY(1.4);
+                    font-size: 16pt;
+                    margin-top: -5px;
+                    font-weight: 300;
+                }
+                .header_navbar_auth_anon_signup_btn_s_txt {
+                    margin-left: -3px;
+                    margin-top: -15px;
+                    font-size: 13.5pt;
+                    font-weight: 400;
+                }
+            .header_navbar_auth_anon_cred_form {
+                width: 190px;
+                display: inline-block;
+                height: 90px;
+            }
+                .header_navbar_auth_anon_cred_form_email {
+                    display: block;
+                    margin-bottom: 0
+                }
+                    .header_navbar_auth_anon_cred_form_email input[type='emai'] {}
+                    .header_navbar_auth_anon_cred_form_email > small {
+                        margin-top:0
+                    }
+                .header_navbar_auth_anon_cred_form_password {
+                    margin-top: 0
+                }
+            .header_navbar_auth_anon_login_btn {
+                display: inline-block;
+                margin-top:-35px;
+                margin-left: 5px;
+                height: 90px;
+                width: 50px;
+            }
+                .header_navbar_auth_anon_login_btn p {
+                    margin-top: -25px;
+                    transform: rotate(90deg) scaleY(1.3);
+                    font-size: 16pt;
+                    font-weight: 300;
+                }
+
+    .sidebar_navbar {
+        padding: 0 0 0 0.9em;
+        border-right: 1px solid rgba(0,0,0,.1);
+        top: 8rem;
+        height: calc(100vh - 8rem);
+        position: sticky;
+        z-index: 1000;
+        width: 15em;
+    }
+        .sidebar_navbar_search {
+            padding: .8em 0 .5em .6em;
+        }
+            .sidebar_navbar_search button {
+                display: inline-block;
+             }
+            .sidebar_navbar_search span {
+                display: inline-block;
+                margin:0;
+                padding:0;
+                width: 83%;
+             }
+
+        .sidebar_navbar_notebooks {
+            border-top: 1px solid rgba(0,0,0,.1);
+            border-bottom: 1px solid rgba(0,0,0,.1);
+            bottom:0;
+            {#max-height: calc(100% - 15em);#}
+            max-height: calc(100% - 7em);
+            overflow-y: auto;
+            overflow-x:hidden;
+            display: inherit;
+            margin:0;
+        }
+            .sidebar_navbar_notebooks_list {
+                padding:0;
+                width:100%;
+            }
+            .sidebar_navbar_create_notebook {}
+                .sidebar_navbar_create_notebook_btn {
+                    margin-top: 0.8em;
+                    margin-left: 0.9em;
+                    position:relative;
+                    width:calc(100% - 1.9em);
+                    width:calc(100% - 1.9em);
+                    height:30px;
+                    padding:0;
+                }
+                    .sidebar_navbar_create_notebook_btn p {
+                        position: absolute;
+                        top: 5px;
+                        left: 10px;
+                        display: inline-block;
+                    }
+                    .sidebar_navbar_create_notebook_btn i {
+                        position: absolute;
+                        display: inline-block;
+                        top: 2px;
+                        right: 2px;
+                        padding: 0px;
+                    }
+
+    .notebook_block {
+        padding:40px 10px;
+    }
+        .notebook_title {
+            width:100%;
+            display: block;
+        }
+            .notebook_title_h {
+                max-width:calc(100% - 30px);
+                display: inline-block;
+                word-wrap: break-word
+            }
+            .notebook_title_edit_icon {
+                cursor:pointer;
+                float:right;
+            }
+        .notebook_edit_form {
+            width:calc(100% - 30px);
+            display: block;
+        }
+            .notebook_edit_form_input {
+                width:100%;
+                display:inline-block;
+            }
+            .notebook_edit_form_save_btn {
+                margin-bottom:2px;
+                height: 30px
+            }
+            .notebook_edit_form_delete_btn {
+                margin-bottom:2px;
+                height: 30px;
+                float: right;
+            }
+        .list_create_form {}
+            .list_create_form_create_btn {
+                float:right
+            }
+
+        .notes_list {
+            list-style-type:none;
+            margin-left: 0;
+            padding-left: 0;
+            max-width:100%;
+        }
+            .notes_list_note {
+                position: relative;
+                border-radius: 6px;
+                margin-top: 5px;
+                width:100%;
+                padding:0;
+                padding-bottom:15px;
+                box-shadow:none;
+                margin-bottom:10px;
+                background-color: transparent;
+                border: 1px solid rgba(0,0,0,0.3)
+            }
+                .notes_list_note_white_preheader {
+                    position: sticky;
+                    transform: translate(-1px, 0);
+                    width:calc(100% + 2px);
+                    top: 125px;
+                    height: 25px;
+                    margin-top:-2px;
+                    background-color: #fafafa!important;
+                }
+                .notes_list_note_header {
+                    z-index:10;
+                    transform: translate(-1px, 0);
+                    width:calc(100% + 2px);
+                    position: sticky;
+                    position: -webkit-sticky;
+                    padding:10px 10px 0 10px;
+                    top: 145px;
+                    margin-top:-5px;
+                    min-height: 2em;
+                    background: white;
+                    background: #fafafa!important;
+                    border-top-left-radius: 6px;
+                    border-top-right-radius: 6px;
+                    border: 1px solid rgba(0,0,0,0.3);
+                }
+                    .notes_list_note_title {
+                        max-width:calc(100% - 30px);
+                        display: inline-block;
+                        word-wrap: break-word;
+                    }
+                    .notes_list_note_edit_icon {
+                        cursor:pointer;
+                        float:right;
+                    }
+                    .notes_list_note_form {
+                        margin-left:30px;
+                        width:calc(100% - 60px);
+                        {#width:100%;#}
+                    }
+                        .notes_list_note_form_input {
+                            width:100%;
+                            display: inline-block;
+                        }
+                        .notes_list_note_form_save_btn {
+                            margin-bottom:2px;
+                            height: 30px
+                        }
+                        .notes_list_note_form_delete_btn {
+                            margin-bottom:2px;
+                            height: 30px;
+                            float: right;
+                        }
+                .notes_list_note_points {
+                    margin:0;
+                    padding:10px 10px 0 20px;
+                }
+                    .notes_list_note_points_list {
+                        list-style-type:none;
+                        padding:0 0 0 10px;
+                    }
+                    .notes_list_note_sub_points_list {
+                        list-style-type:none;
+                        padding:0 0 0px 10px;
+                        border-left:1px solid rgba(0,0,0,0.3);
+                    }
+                        .notes_list_note_points_list_point {
+                        }
+                            .notes_list_note_points_list_point_title {
+                                cursor:pointer;
+                                margin:7px 0 -6px 0;
+                                {#margin:0;#}
+                                padding:0;
+                                {#margin-left:10px;#}
+                                max-width:calc(100% - 30px);
+                                display: inline-block;
+                                overflow-x: auto;
+                            }
+                                .notes_list_note_points_list_point_title::-webkit-scrollbar-track {
+                                    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                                    border-radius: 10px;
+                                    background-color: #F5F5F5;
+                                }
+                                .notes_list_note_points_list_point_title::-webkit-scrollbar {
+                                    height: 8px;
+                                    border-radius: 10px;
+                                    background-color: #F5F5F5;
+                                }
+                                .notes_list_note_points_list_point_title::-webkit-scrollbar-thumb {
+                                    height:5px;
+                                    border-radius: 10px;
+                                    border:2px solid dimgrey;
+                                    background-color: #ffffff;
+                                }
+                            .notes_list_note_points_list_point_edit_icon {
+                                cursor:pointer;
+                                float: right
+                            }
+                            .notes_list_note_points_list_point_form {
+                                width:calc(100% - 30px);
+                            }
+                                .notes_list_note_points_list_point_form_input {
+                                    width:100%;
+                                    display: inline-block;
+                                }
+                                .notes_list_note_points_list_point_form_save_btn {
+                                    margin-bottom:2px;
+                                    height: 30px
+                                }
+                                .notes_list_note_points_list_point_form_delete_btn {
+                                    margin-bottom:2px;
+                                    height: 30px;
+                                    float: right;
+                                }
+                        .notes_list_note_points_list_new_point {
+                            width:100%;
+                            padding:0;
+                            overflow: hidden;
+                            padding:2px 0;
+                            z-index: 3;
+                        }
+                            .notes_list_note_points_list_new_point_input {
+                                psotion:relative;
+                                margin-left:0px;
+                                width:calc(100% - 30px);
+                                display:inline-block;
+                                z-index: 3;
+                            }
+                            .notes_list_note_points_list_new_point_add_btn {
+                                cursor:pointer;
+                                float: right;
+                                z-index: 3;
+                            }
+
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+</style>
+
+
+<title>List yourself</title>
+
+</head>
+
+<body ng-app="NoteApp" ng-controller="AuthenticationController">
+    {% verbatim %}
+        <header class="
+
+            navbar navbar-expand navbar-light flex-column flex-md-row bd-navbar
+            bg-light justify-content-between
+            header_navbar
+        ">
+
+        <!-- LOGO-->
+            <div class="navbar-brand header_navbar_logo">
+                <img class="header_navbar_logo_img"
+                        src="/static/logo-1552158594661.png"
+                />
+            </div>
+            <div
+                    class="system-messages"
+                    style="
+                        width:300px;
+                        height:30px
+                    "
+            >
+
+            </div>
+            <div class="nav justify-content-end float-right header_navbar_auth">
+                <div class="header_navbar_auth_logged" ng-if="loggedInUser">
+                    <div class="text-right header_navbar_auth_logged_txt"
+                            ng-cloak
+                    >
+                        You are logged in!
+                        <br>
+                            {{ loggedInUser }}
+                        <br>
+                        Click button to
+                    </div>
+                    <button
+                            class="btn btn-outline btn-primary header_navbar_auth_logged_logout_btn"
+                            ng-click="authLogout()"
+                    >
+                        <p>
+                            LOGOUT
+                        </p>
+                    </button>
+                </div>
+                <div class="header_navbar_auth_anon"
+                        ng-if="!loggedInUser"
+                        ng-cloak
+                >
+                    <button class="btn btn-raised btn-outline-primary header_navbar_auth_anon_signup_btn"
+                            ng-click="authSignUp(authUsername, authPassword)"
+                    >
+                        <p class="header_navbar_auth_anon_signup_btn_f_txt">
+                            SIGN
+                        </p>
+                        <br>
+                        <p class="header_navbar_auth_anon_signup_btn_s_txt">
+                            UP
+                        </p>
+                    </button>
+                    <form class="header_navbar_auth_anon_cred_form">
+                        <div class="form-group header_navbar_auth_anon_cred_form_email">
+                            <input class="form-control" id="exampleInputEmail1"
+                                    type="email"
+                                    aria-describedby="emailHelp"
+                                    placeholder="Enter email"
+                                    ng-model="authUsername"
+                            >
+                            <small class="form-text text-muted" id="emailHelp">
+                                We'll never share your email.
+                            </small>
+                        </div>
+                        <div class="form-group header_navbar_auth_anon_cred_form_password">
+                            <input class="form-control" id="exampleInputPassword1"
+                                    type="password"
+                                    placeholder="Password"
+                                    ng-model="authPassword"
+                            >
+                        </div>
+                    </form>
+                    <button class="btn btn-outline btn-primary header_navbar_auth_anon_login_btn"
+                            ng-click="authLogin(authUsername, authPassword)"
+                    >
+                        <p>
+                            LOGIN
+                        </p>
+                    </button>
+                </div>
+            </div>
+        </header>
+    {% endverbatim %}
+
+    <container class="row" ng-controller="NotebookController">
+        {% verbatim %}
+            <div class="bd-sidebar sidebar_navbar" ng-cloak ng-if="loggedInUser">
+                <div class=" sidebar_navbar_search">
+                    <button class="btn bmd-btn-icon" for="search" aria-expanded="false" >
+                        <i class="material-icons">search</i>
+                    </button>
+                    <span>
+                        <input class="form-control" type="text" id="search" placeholder="Search">
+                    </span>
+                </div>
+                <ul class="nav flex-column sidebar_navbar_notebooks">
+                    <li class="nav-item sidebar_navbar_notebooks_list"
+                            ng-repeat="notebook in notebooksList">
+                        <a class="nav-link active" href="/notebook/{{ notebook.id }}/">
+                            {{ notebook.title }}
+                        </a>
+                    </li>
+                </ul>
+                <button class="btn btn-outline btn-primary sidebar_navbar_create_notebook_btn"
+                        ng-click="createNotebook()"
+                        type="button"
+                >
+                    <p>
+                        Add notebook
+                    </p>
+                    <i class="material-icons">
+                        add
+                    </i>
+                </button>
+            </div>
+        {% endverbatim %}
+        <div class="col-8 col-md-8 col-xl-8 py-md-3 pl-md-5 bd-content">
+            {% block notebooks %}{% endblock %}
+        </div>
+    </container>
+
+{% block script %}{% endblock %}
+</body>
+</html>

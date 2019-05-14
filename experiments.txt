@@ -1,0 +1,460 @@
+
+Создание новых пунктов в новом списке.
+находилось в
+.list_create_form
+после кнопки
+
+                <!--
+                <p>
+                    <!-- ng-repeat="point in pointsList0" -->
+
+                    <ul class="list-group list-group-flush list_create_form">
+                        <li class="list-group-item"
+                            ng-repeat="point in pointsList[0]"
+                            style="
+                            <!--
+                            margin-left:-15px;
+                            margin-top:-10px;
+                            margin-bottom:-10px;
+                            -->
+                            "
+                        >
+                            <i
+                                class="material-icons"
+                                style="
+                                    border: 2px solid transparent;
+                                    margin-left:-20px;
+                                    margin-right:10px;
+                                "
+                            >
+                                reorder
+                            </i>
+                            <!--
+                            <label class="checkbox-inline" style="margin-top: -11px">
+                                <input type="checkbox" id="inlineCheckbox1" value="option1"><span class="checkbox-decorator"><span class="check"></span><div class="ripple-container"></div></span>
+                            </label>
+                            -->
+                            {{ point.title }}
+                        </li>
+                    </ul>
+                    <!--
+                    <input class="form-control"
+                            type="text"
+                            placeholder="New point"
+                            ng-model='point_title_input[0][0]'
+                            style="
+                                width:300px;
+                                display: inline-block;
+                            "
+                    >
+                    <button class="btn btn-outline-secondary" type="button"
+                            ng-click="editPoint(0, 0, 0, 'change_btn')"
+                            style="
+                            margin-bottom:2px;
+                                height: 30px
+
+                    ">
+                        Add
+                    </button>
+
+                </p>
+                -->
+                <!--
+
+                <button class="btn btn-outline-secondary" type="button">
+                    Clear
+                </button>
+
+                <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        ng-click="editNote(0, 'is_list')"
+                >
+                    Create
+                </button>
+                -->
+
+
+========================================================================
+========================================================================
+========================================================================
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="navbar-brand float-left ">Navbar</div>
+        <div>
+            <button type="submit" class="btn btn-primary float-right"
+                    style="display: inline-block;
+                    {#margin-top: -36px; #}
+                        margin-bottom: 0; margin-left: -15px;
+                        height: 90px;
+                        width: 50px;
+                        float: right;
+                    {#background-color: blue;#}
+                    {#border:2px solid red#}
+                ">
+    {#            Sign up#}
+    {#                S  <br>#}
+    {#                I  <br>#}
+    {#                G  <br>#}
+    {#                N  <br>#}
+
+    {#            <p style="transform: rotate(90deg); font-size: 19pt;#}
+    {#                    margin-top: -5px;#}
+    {#                    font-weight: 400">#}
+    {#                SIGN#}
+    {#            </p>#}
+    {#            <br>#}
+    {#            <p style="margin-top: -10px;#}
+    {#                    font-weight: 600">#}
+    {#                UP#}
+    {#            </p>#}
+
+                <p style="transform: rotate(90deg) scaleY(1.3);
+                        {#font-size: 19pt;#}
+                        font-size: 16pt;
+                        margin-top: -5px;
+                        font-weight: 400;">
+                    SIGN
+                </p>
+                <br>
+
+                <p style="
+                        margin-left: -2px;
+                        margin-top: -17px;
+                        font-size: 13pt;
+                        {#font-weight: 600#}
+    ">
+                    UP
+                </p>
+
+            </button>
+                <form class="float-right"
+                        style="width: 230px;display: inline-block;
+                            {#background-color: blue;#}
+                            {#height: 80px;#}
+                            height: 90px;
+                            float: right;
+                        ">
+                    <div class="form-group" style="display: block">
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted"
+                                style="margin-top:0">
+                            We'll never share your email.
+                        </small>
+                    </div>
+                    <div class="form-group" style="display: block; margin-top: -15px">
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    </div>
+                </form>
+                <button type="submit" class="btn btn-primary float-right"
+                    style="
+                        display: inline-block;
+                    {#margin-top: -36px; #}
+                        margin-bottom: 0;
+                        margin-left: 5px;
+                        height: 90px;
+                        width: 50px;
+                            float: right;
+                    {#background-color: blue;#}
+                    {#border:2px solid red#}
+                ">
+        {#            L <br>#}
+        {#            o <br>#}
+        {#            g <br>#}
+        {#            i <br>#}
+        {#            n <br>#}
+        {#                <p style="  transform: rotate(90deg); font-size: 12pt; margin-top: -25px">#}
+        {#                    L o g i n#}
+        {#                </p>#}
+                    <p style="
+                            margin-top: -25px;
+                            transform: rotate(90deg) scaleY(1.3);
+                            font-size: 16pt;
+                            font-weight: 400;
+                    ">
+                        LOGIN
+                    </p>
+        {#                <br>#}
+        {#                <p style=" font-size: 14pt; margin-top: -15px">#}
+        {#                    n#}
+        {#                    LOGIN#}
+        {#                </p>#}
+        {#            <p style="  transform: rotate(90deg);font-size: 15pt">#}
+        {#                В о й т и#}
+        {#            </p>#}
+                </button>
+
+
+                <br>
+                <br>
+
+            </form>
+        </div>
+    </nav>
+
+
+
+{% load static %}
+<img src="{% static 'site/img/low-res.jpg' %}"
+     srcset="{% static 'site/img/high-res.jpg' %} 2x"
+     alt=""
+/>
+
+let html = `
+<h1>Hello World!</h1>
+<p>This is my first post</p>
+`.trim()
+
+
+
+curl -L -O  https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.0.0-darwin-x86_64.tar.gz
+tar -xvf elasticsearch-7.0.0-darwin-x86_64.tar.gz
+./elasticsearch-7.0.0/bin/elasticsearch
+
+
+
+curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.7.1.tar.gz
+tar -xvf elasticsearch-6.7.1.tar.gz
+./elasticsearch-6.7.1/bin/elasticsearch
+
+
+
+curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.tar.gz
+tar -xvf elasticsearch-5.6.16.tar.gz
+./elasticsearch-5.6.16/bin/elasticsearch
+./manage.py search_index --rebuild
+
+
+
+
+
+
+def asd():
+    l1 = [2,4,3]
+    l2 = [5,6,4]
+    # num1 = l1[::1]
+    num1 = int("".join(list(map(str, l1[::-1]))))
+    # num2 = l2[::1]
+    num2 = int("".join(list(map(str, l2[::-1]))))
+    qwe = int(num1) + int(num2)
+    return qwe
+
+
+import itertools
+
+import subprocess
+subprocess.call('ulimit -v 12000', shell=True)
+
+import resource
+rsrc = resource.RLIMIT_DATA
+resource.setrlimit(rsrc, (8, hard))
+soft, hard = resource.getrlimit(rsrc)
+
+
+num = 1000000
+
+qwe = 0
+t = time.time()
+for i in range(num):
+    qwe += i
+tt = time.time() - t
+print(tt)
+
+qwe = 0
+list_ = []
+for n in range(num):
+    list_.append(n)
+t = time.time()
+for index, iteger in enumerate(list_):
+    qwe += iteger
+tt = time.time() - t
+print(tt)
+
+
+haystack = "aaaaa"
+needle = "bba"
+
+import re
+qwe = re.search(needle, haystack)
+qwe.start()
+
+
+nums = [0,0,1,1,1,2,2,3,3,4]
+
+for index, n in enumerate(nums):
+    print(index, n)
+    if not index == 0:
+        if n == nums[index - 1]:
+            del nums[index - 1]
+print(nums)
+
+
+
+nums = [1,1,2]
+index = 0
+while nums[index]:
+    if index:
+        if n == nums[index - 1]:
+            del nums[index - 1]
+        else:
+            index += 1
+print(nums)
+
+
+
+
+
+
+
+"""
+Kusko, [8 февр. 2019 г., 12:19:30]:
+            created_at=timestamp,
+            datetime=date_time,
+            action=action.id,
+            user=30,
+            device='qweasdqwe asd',
+            application=action.application.id,
+        )
+    )
+    print('time remain=', (1000000-i))
+ClickhouseDatabase.insert(toons_of_actions)ц
+
+
+
+from instat.models import *
+action_stamps_internal = ActionStampInternal\
+    .objects_in(ClickhouseDatabase)\
+    .filter(
+        application=6,
+    )
+for a in action_stamps_internal:
+    print(' as=', a.datetime)
+
+
+action=222,
+
+./manage.py shell --settings=inservice.settings.development
+
+
+
+`
+
+Kusko, [8 февр. 2019 г., 12:19:51]:
+`
+class ActionStampCounterViewSet(AbstractPointCounterViewSet):
+    This class counts actions from clickhouse adjusted period of time with appropriated detailing.
+    Aggregation is list with all actions and its metadata in period between start & end.
+    Results is list with all actions and its metadata  separated by relations to actions in period between start & end.
+
+
+    def list(self, request, *args, **kwargs):
+        data = self.form_data(request)
+        return Response(data)
+
+    def get_results(self, request):
+        global_start = time.time()
+
+        aggregated = {'data': []}
+        results = []
+
+        total_agrgated_values = []
+        results_values = {}
+
+        application = request.query_params.get('application')
+        # print(application)
+        actions = Action.objects.filter(application=application).values_list('pk', flat=True)
+        actions_ids = tuple(map(int, actions))
+        print(actions_ids)
+        # print(len(actions_ids))
+        qweqwe = ActionStampInternal \
+            .objects_in(ClickhouseDatabase) \
+            .filter(
+                datetime__gte=dt.datetime.utcfromtimestamp(1514768460).replace(tzinfo=pytz.utc),
+            ).count()
+        print('qeqwe=', qweqwe)
+
+        time_scale = self.form_time_scale(request)
+        for ts in range(len(time_scale) - 1):
+
+            # gmt = int(request.query_params.get('gmt'))
+            # start_datetime = dt.datetime.utcfromtimestamp(int(time_scale[ts])).replace(tzinfo=pytz.utc) - dt.timedelta(minutes=gmt)
+            # end_datetime = dt.datetime.utcfromtimestamp(int(time_scale[ts+1])).replace(tzinfo=pytz.utc) - dt.timedelta(minutes=gmt)
+
+            start_datetime = dt.datetime.utcfromtimestamp(int(time_scale[ts])).replace(tzinfo=pytz.utc)
+            end_datetime = dt.datetime.utcfromtimestamp(int(time_scale[ts+1])).replace(tzinfo=pytz.utc)
+
+
+
+            action_stamps_internal_count = ActionStampInternal \
+                .objects_in(ClickhouseDatabase) \
+                .filter(
+                    application=application,
+                    datetime__gte=start_datetime,
+                    datetime__lt=end_datetime
+                ).count()
+
+            total_agrgated_values.append(action_stamps_internal_count)
+
+            inst_ts = self.make_inst(time_scale[ts], action_stamps_internal_count, aggregated['data'])
+            aggregated['data'].append(inst_ts)
+
+            action_stamps_internal = ActionStampInternal \
+                .objects_in(ClickhouseDatabase) \
+                .filter(
+                    application=application,
+                    datetime__gte=start_datetime,
+                    datetime__lt=end_datetime
+                ) \
+                .only('action') \
+                .aggregate(action='action', num='count()') \
+                .group_by('action')
+
+            # copy actions_ids to check if all actions are displayed in statistic (there are no records if nothing happend)
+            check_actions_list = list(actions_ids)
+
+            for action_stamp in action_stamps_internal:
+                action_id = str(action_stamp.action)
+                check_actions_list.remove(action_stamp.action)
+                if action_id not in results_values:
+                    results_values[action_id] = {
+                        'id': action_id,
+                        'data': [],
+                        'total_results_values': [],
+                    }
+
+                action_stamp_quantity = action_stamp.num
+                results_values[action_id]['total_results_values'].append(action_stamp_quantity)
+                inst_ts = self.make_inst(time_scale[ts], action_stamp_quantity, results_values[action_id]['data'])
+                results_values[action_id]['data'].append(inst_ts)
+
+            # append all missed actions to statistic. This iteration may slow code.
+            for action in check_actions_list:
+                action_id = str(action)
+                if action_id not in results_values:
+                    results_values[action_id] = {
+                        'id': action_id,
+
+Kusko, [8 февр. 2019 г., 12:19:51]:
+                        'data': [],
+                        'total_results_values': [],
+                    }
+
+                action_stamp_quantity = 0
+                results_values[action_id]['total_results_values'].append(action_stamp_quantity)
+                inst_ts = self.make_inst(time_scale[ts], action_stamp_quantity, results_values[action_id]['data'])
+                results_values[action_id]['data'].append(inst_ts)
+
+        for action_id in actions_ids:
+            action_id = str(action_id)
+
+            self.form_metadata(results_values[action_id]['total_results_values'], results_values[action_id])
+            del results_values[action_id]['total_results_values']
+            results.append(results_values[action_id])
+
+        self.form_metadata(total_agrgated_values, aggregated)
+        print('time wasted=', (time.time()-global_start), 'sec')
+
+        return [results, aggregated]
+"""
+

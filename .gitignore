@@ -1,0 +1,12 @@
+
+.idea/
+*.pyc
+*.save
+*.swp
+*.sqlite3
+secret_settings.py
+deploy.sh
+wsgi.py
+env/
+media/
+scripts/

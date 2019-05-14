@@ -1,0 +1,573 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block script %}
+    {{  block.super }}
+
+    <script>
+
+{#НЕ УДАЛЯТЬ!#}
+{#        CKEDITOR.on('instanceReady', function(editor) {#}
+{#            $("#cke_editor").css({'box-shadow': ''}); // Все окно#}
+{#            $(".cke_reset").css({'box-shadow': ''}); // Все окно#}
+{#            $(".cke").css({'border': '2px solid #ccc', 'border-radius': '6px','box-shadow': ''}); // Все окно#}
+{#            $(".cke_inner").css({'border-radius': '6px','box-shadow': ''});#}
+{##}
+{#            $(".cke_chrome").css({'box-shadow': ''});#}
+{#            $(".cke_top").css({'box-shadow': '', 'border-top-left-radius': '6px', 'border-top-right-radius': '6px', 'border-bottom': '1px solid #ccc'});#}
+{#            $(".cke_bottom").css({'padding-top': '0px', 'border': '0', 'border-bottom-left-radius': '6px', 'border-bottom-right-radius': '6px',});#}
+{#            $(".ck2e_toolgroup").css({'border': '1px solid #ccc'});#}
+{##}
+{#        });#}
+
+    const notebook_id = document.getElementsByClassName("notebook-id")[0].getAttribute('data-notebook-id');
+
+    app.factory('NotebooksFactory', function($resource) {
+        var url = '/api/notebooks/';
+        return $resource(url,
+            {},
+            {
+                get: {
+                    method: "GET",
+                    params: {},
+                    isArray: true,
+                    cache:false
+                },
+                put: {
+                    method: 'PUT',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                patch: {
+                    method: 'PATCH',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                delete: {
+                    url: '/api/notebooks/:id/',
+                    method: 'DELETE',
+                    params: {},
+                    data: {id: '@id'},
+                    isArray: false,
+                    cache: false
+                }
+            },
+            {stripTrailingSlashes: false}
+        )
+    });
+
+    app.factory('NotesFactory', function($resource) {
+        var url = '/api/notes/';
+        return $resource(url,
+            {},
+            {
+                get: {
+                    method: "GET",
+                    params: {},
+                    isArray: true,
+                    cache:false
+                },
+                put: {
+                    method: 'PUT',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                patch: {
+                    method: 'PATCH',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                delete: {
+                    url: '/api/notes/:id/',
+                    method: 'DELETE',
+                    params: {
+                        {#action: "delete"#}
+                    },
+                    data: {
+                        id: '@id'
+                    },
+                    isArray: false,
+                    cache:false
+                }
+            },
+            {stripTrailingSlashes: false}
+        )
+    });
+
+    app.factory('PointsFactory', function($resource) {
+        var url = '/api/points/';
+        return $resource(url,
+            {},
+            {
+                get: {
+                    method: "GET",
+                    params: {},
+                    isArray: true,
+                    cache:false
+                },
+                put: {
+                    method: 'PUT',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                patch: {
+                    method: 'PATCH',
+                    params: {},
+                    isArray: false,
+                    cache:false
+                },
+                delete: {
+                    url: '/api/points/:id/',
+                    {#url: '/api/points/',#}
+                    method: 'DELETE',
+                    {#params: {id:'@id'},#}
+                    params: {
+                            {#action: "delete"#}
+                        },
+                    data: {
+                        id: '@id'
+                    },
+                    {#data: {id:'@id'},#}
+                    isArray: false,
+                    cache:false
+                 }
+            },
+            {stripTrailingSlashes: false}
+        )
+    });
+    
+
+    app.controller('NoteController',
+    ['$scope', '$http', '$window', '$resource', '$filter',
+        'NotesFactory', 'PointsFactory',
+    function($scope, $http, $window, $resource, $filter,
+             NotesFactory, PointsFactory) {
+        $scope.setPointOrder = function (order) {
+            $scope.pointOrder = order;
+        };
+        $scope.setPointOrder('id');
+
+        $scope.notesList = [];  // we must defin it before work
+        $scope.new_note_title_input = '';  // we must defin it before work
+        $scope.pointsList = [];  // we must define it before work
+
+        $scope.notesList = [];  // we must defin it before work
+
+         $scope.formData = [
+          {label:'First Name', type:'text', required:'true'},
+          {label:'Last Name', type:'text', required:'true'},
+          {label:'Coffee Preference', type:'dropdown', options: ["HiTest", "Dunkin", "Decaf"]},
+          {label: 'Address', type:'group', "Fields":[
+              {label:'Street1', type:'text', required:'true'},
+              {label:'Street2', type:'text', required:'true'},
+              {label:'State', type:'dropdown',  options: ["California", "New York", "Florida"]}
+            ]},
+          ];
+
+        NotesFactory.query({
+                notebook_id:notebook_id
+            })
+            .$promise.then(
+                function(response) {
+                    {#console.log(' NotesFactory.query response =' + JSON.stringify(response))#}
+                    $scope.notesList = response;
+                    angular.forEach($scope.notesList, function(note) {
+                        PointsFactory.query({
+                            note_id:note.id
+                        })
+                        .$promise.then(
+                            function(response) {
+                                note.points = response;
+                            }
+                        );
+                    });
+                }, function(error) {
+                    {#console.log(' NotesFactory.query error =' + JSON.stringify(error))#}
+                }
+            );
+
+        $scope.editNote = function(index, note, note_type) {
+            var is_list = false;
+            if (note_type === 'is_list') {is_list = true}
+
+            var is_note = false;
+            if (note_type === 'is_note') {is_note = true}
+
+            var title = $scope.new_note_title_input;
+
+            NotesFactory.put({
+                    notebook_id:notebook_id,
+                    title:title,
+                    is_list: is_list,
+                })
+                .$promise.then(
+                    function(response) {
+                        {#console.log(' editNote response =' + JSON.stringify(response))#}
+                        $scope.notesList.push(response);
+                        $scope.new_note_title_input = '';
+                        angular.forEach(points_ids, function(point_id) {
+                            PointsFactory.patch({
+                                id:point_id,
+                                note_id:response.id
+                            });
+                        });
+                    }, function(error) {
+                        {#console.log(' editNote error =' + JSON.stringify(error))#}
+                    }
+                );
+            if (note === 0) {
+                var points_ids = [];
+                angular.forEach($scope.pointsList,
+                    function(new_point){
+                        points_ids.push(new_point.id)
+                    }
+                );
+
+            } else {
+                NotesFactory.patch({
+                    id:note.id,
+                    notebook_id:notebook_id,
+                    title:title,
+                    is_list: is_list,
+                })
+                .$promise.then(
+                    function(response) {
+                        {#console.log(' editNote response =' + JSON.stringify(response))#}
+                        note.title = response.title
+                        note.note_title_input = response.title;
+                    }, function(error) {
+                        {#console.log(' error editNote =' + JSON.stringify(error))#}
+                    }
+                );
+            }
+        };
+
+
+        $scope.editPoint = function(index, note, point, action) {
+            var data = {
+                notebook_id:notebook_id,
+                note_id:note.id,
+            }
+            if (action === 'new') {
+                if (point.id) {
+                    data['point_id'] = point.id
+                    data['title'] = point.new_sub_point_title_input
+                } else {
+                    data['title'] = note.new_point_title_input;  // здесь point === 0 так как новый
+                }
+                PointsFactory.put(data)
+                    .$promise.then(
+                        function(response) {
+                            {#console.log('editPoint put success = ' + JSON.stringify(response));#}
+                            if (point.id) {
+                                point.sub_points.push(response)
+                                point.new_sub_point_title_input = ''  // здесь point === 0 так как новый
+                            } else {
+                                note.new_point_title_input = ''  // здесь point === 0 так как новый
+                                if (!note.points) {
+                                    note.points = []
+                                }
+                                note.points.push(response)
+                            }
+                        }, function(error) {
+                            {#console.log('editPoint put error = ' + JSON.stringify(error));#}
+                        }
+                    );
+            } else {
+                data['id'] = point.id
+
+                if (action === 'cross_out') {
+                    data['cross_out'] = true
+                }
+                if (action === 'change') {
+                    data['title'] = point.point_title_input;
+                }
+                PointsFactory.patch(data)
+                    .$promise.then(
+                        function(response) {
+                            {#console.log(' editPoint patch success = ' + JSON.stringify(response));#}
+                            point.title = response.title
+                            point.point_title_input = response.title
+                            point.is_deleted = response.is_deleted
+                            point.is_crossed = response.is_crossed
+                        }, function(error) {
+                            {#console.log(' editPoint patch error = ' + error)#}
+                        }
+                    );
+            }
+        };
+
+        $scope.deletePoint = function(index, note, point) {
+            PointsFactory
+                .delete({
+                    id:point.id
+                })
+                .$promise.then(
+                    function(response) {
+                        {#console.log(' deletePoint success = ' + JSON.stringify(response));#}
+                        if (response.is_deleted === true) {
+                            point.is_deleted = response['is_deleted'];
+                            point.edit_block = false
+                        }
+                    }, function(error) {
+                        {#console.log(' deletePoint error = ' + JSON.stringify(error))#}
+                    }
+                );
+        }
+    }])
+</script>
+
+{% endblock %}
+
+
+{% block notebooks %}
+{#    {{  block.super }}#}
+
+    <div class="notebook-id notebook_block"
+            data-notebook-id="{{ notebook.id }}"
+            ng-controller="NoteController"
+            ng-if="loggedInUser"
+    >
+        {% verbatim %}
+            <!-- nested list -->
+            <script id="field_renderer.html" type="text/ng-template" >
+                <span class="point_title notes_list_note_points_list_point_title"
+                        ng-click="editPoint($index, note, point, 'cross_out')"
+                        ng-class="{crossed: point.is_crossed == true}"
+                >
+                    {{ point.title }}
+                </span>
+                <img class="notes_list_note_points_list_point_edit_icon"
+                        src="/static/baseline-more_vert-24px.svg"
+                        ng-click="point.edit_block = !point.edit_block"
+                />
+
+                <p class="notes_list_note_points_list_point_form"
+                   ng-if="point.edit_block"
+                >
+                    <input class="form-control notes_list_note_points_list_point_form_input"
+                        type="text"
+                        ng-value="point.title"
+                        ng-model='point.point_title_input'
+                    >
+                    <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_save_btn"
+                            type="button"
+                            ng-click="editPoint($index, note, point, 'change'); point.edit_block = !point.edit_block"
+                    >
+                        edit
+                    </button>
+                    <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_delete_btn"
+                            type="button"
+                            ng-click="deletePoint($index, note, point)"
+                    >
+                        delete
+                    </button>
+                </p>
+
+                <ul class="notes_list_note_sub_points_list">
+                    <li class="notes_list_note_points_list_point"
+                        ng-repeat="point in point.sub_points"
+                        ng-if="!point.is_deleted"
+                        ng-include="'field_renderer.html'"
+                    ></li>
+                    <li class="notes_list_note_points_list_new_point"
+                        ng-if="point.edit_block">
+                        <input class="form-control notes_list_note_points_list_new_point_input"
+                                type="text"
+                                placeholder="New sub point"
+                                ng-model="point.new_sub_point_title_input"
+                        >
+                        <img class="notes_list_note_points_list_new_point_add_btn"
+                                ng-click="editPoint($index, note, point, 'new')"
+                                src="/static/baseline-add-24px.svg"
+                        />
+                    </li>
+                </ul>
+            </script>
+            <div ng-cloak>
+                <div class="notebook_title">
+                    <h2 class="notebook_title_h">
+                        {{ notebooksList[curent_notebook_index].title }}
+                    </h2>
+                    <img    class="notebook_title_edit_icon"
+                            src="/static/baseline-more_vert-24px.svg"
+                            ng-click="notebooksList[curent_notebook_index].edit_block = !notebooksList[curent_notebook_index].edit_block"
+                    />
+                </div>
+                <div class="notebook_edit_form"
+                        ng-if="notebooksList[curent_notebook_index].edit_block"
+                >
+                    <input class="form-control notebook_edit_form_input"
+                        type="text"
+                        ng-value="notebooksList[curent_notebook_index].title"
+                        ng-model='notebook_title_input[notebooksList[curent_notebook_index].id]'
+                        ng-model='notebook_title_input[notebooksList[curent_notebook_index].id]'
+                    >
+                    <br>
+                    <button class="btn btn-outline-secondary notebook_edit_form_save_btn"
+                            type="button"
+                            ng-click="
+                                editNotebook(curent_notebook_index, notebooksList[curent_notebook_index].id, 'edit');
+                                notebooksList[curent_notebook_index].edit_block = !notebooksList[curent_notebook_index].edit_block
+                            "
+                    >
+                        edit
+                    </button>
+                    <button class="btn btn-outline-secondary notebook_edit_form_delete_btn"
+                            type="button"
+                            ng-click="
+                                deleteNotebook(curent_notebook_index, notebooksList[curent_notebook_index].id);
+                                notebooksList[curent_notebook_index].edit_block = !notebooksList[curent_notebook_index].edit_block
+                            "
+                    >
+                        delete
+                    </button>
+                </div>
+                <div class="list_create_form">
+                    <div class="form-group"> <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                        <label class="bmd-label-floating"
+                            for="formGroupExampleInput"
+                        >
+                            New list
+                        </label>
+                        <input class="form-control"
+                            ng-model="new_note_title_input"
+                            id="formGroupExampleInput"
+                            type="text"
+                        >
+                        <button class="btn btn-outline-secondary"
+                                type="button"
+                                ng-click="editNote(0, 0, 'is_list')"
+                        >
+                            Create
+                        </button>
+                    </div>
+                </div>
+
+                <ul class="notes_list">
+                    <li class="notes_list_note"
+                        ng-repeat="note in notesList track by $index"
+                    >
+                        <div class="notes_list_note_white_preheader">
+                        </div>
+                        <div class="notes_list_note_header">
+                            <h2 class="notes_list_note_title">
+                                {{ note.title }}
+                            </h2>
+                            <img class="notes_list_note_edit_icon"
+                                    src="/static/baseline-more_vert-24px.svg"
+                                    ng-click="note.edit_block = !note.edit_block"
+                            />
+
+                            <p class="notes_list_note_form"
+                               ng-if="note.edit_block"
+                            >
+                                <input class="form-control notes_list_note_form_input"
+                                    type="text"
+                                    ng-value="note.title"
+                                    ng-model='note.note_title_input'
+                                >
+                                <button class="btn btn-outline-secondary notes_list_note_form_save_btn"
+                                        type="button"
+                                        ng-click="editNote($index, note, 'change_btn'); note.edit_block = !note.edit_block"
+                                >
+                                    edit
+                                </button>
+                                <button class="btn btn-outline-secondary notes_list_note_form_delete_btn"
+                                        type="button"
+                                        ng-click="deleteNote($index, note.id)"
+                                >
+                                    delete
+                                </button>
+                            </p>
+                        </div>
+                        <div class="notes_list_note_points">
+                            <ul class="notes_list_note_points_list">
+                                <li class="notes_list_note_points_list_point"
+                                        ng-repeat="point in note.points track by $index"
+                                        ng-if="!point.parent_point"
+                                        ng-class="{deleted: point.is_deleted == true}"
+                                >
+                                    <span class="notes_list_note_points_list_point_title"
+                                            ng-click="editPoint($index, note, point, 'cross_out')"
+                                            ng-class="{crossed: point.is_crossed == true}"
+                                    >
+                                        {{ point.title }}
+                                    </span>
+                                    <img class="notes_list_note_points_list_point_edit_icon"
+                                            src="/static/baseline-more_vert-24px.svg"
+                                            ng-click="point.edit_block = !point.edit_block"
+                                    />
+
+                                    <p class="notes_list_note_points_list_point_form"
+                                       ng-if="point.edit_block"
+                                    >
+                                        <input class="form-control notes_list_note_points_list_point_form_input"
+                                            type="text"
+                                            ng-value="point.title"
+                                            ng-model='point.point_title_input'
+                                        >
+                                        <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_save_btn"
+                                                type="button"
+                                                ng-click="editPoint($index, note, point, 'change'); point.edit_block = !point.edit_block"
+                                        >
+                                            edit
+                                        </button>
+                                        <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_delete_btn"
+                                                type="button"
+                                                ng-click="deletePoint($index, note, point)"
+                                        >
+                                            delete
+                                        </button>
+                                    </p>
+
+                                    <ul class="notes_list_note_sub_points_list"
+                                        ng-if="point.sub_points.length != 0 || point.edit_block"
+                                    >
+                                        <li class="notes_list_note_points_list_point"
+                                            ng-class="{deleted: point.is_deleted == true}"
+                                            ng-if="!point.is_deleted"
+                                            ng-repeat="point in point.sub_points"
+                                            ng-include="'field_renderer.html'"
+                                        >
+                                        </li>
+                                        <li ng-if="point.edit_block"
+                                        >
+                                            <input class="form-control notes_list_note_points_list_new_point_input"
+                                                    type="text"
+                                                    placeholder="New sub point"
+                                                    ng-model='point.new_sub_point_title_input'
+                                            >
+                                            <img class="notes_list_note_points_list_new_point_add_btn"
+                                                    ng-click="editPoint($index, note, point, 'new')"
+                                                    src="/static/baseline-add-24px.svg"
+                                            />
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="notes_list_note_points_list_new_point">
+                                    <input class="form-control notes_list_note_points_list_new_point_input"
+                                            type="text"
+                                            placeholder="New point"
+                                            ng-model='note.new_point_title_input'
+                                    >
+                                    <img class="notes_list_note_points_list_new_point_add_btn"
+                                            ng-click="editPoint($index, note, 0, 'new')"
+                                            src="/static/baseline-add-24px.svg"
+                                    />
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        {% endverbatim %}
+    </div>
+{% endblock %}
+

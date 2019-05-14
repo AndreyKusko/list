@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: list_db
+      POSTGRES_USER: list_alpha_user
+      POSTGRES_PASSWORD: mucho_Listo_cuduro_324252
+    restart: always
+  web:
+    build: .
+    restart: always
+#    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py migrate && gunicorn --workers 3 --bind 0.0.0.0:8000 main_files.wsgi:application --timeout 300"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
