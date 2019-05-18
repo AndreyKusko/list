@@ -14,7 +14,19 @@ nano /root/list/main_files/secret_settings.py
 
 docker-compose build
 docker-compose up --build
+docker-compose run web python manage.py createsuperuser.
+
 ```
+
+# Разворачивание проекта
+
+git clone git@gitlab.com:Kusko/list.git
+
+
+
+
+
+
 
 # Запуск сервера
 
@@ -58,7 +70,7 @@ django-admin.py startproject main_files .
 # Adjust the Project Settings
 
 nano /root/list/main_files/settings.py
-
+```
 import datetime
 import os
 
@@ -197,7 +209,7 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=3),
 }
 
-
+```
 
 
 
@@ -205,7 +217,7 @@ JWT_AUTH = {
 
 nano /root/list/main_files/secret_settings.py
 
-
+```
 import os
 
 SERVER = 'BATTLE'
@@ -246,13 +258,13 @@ DATABASES = {
         'PORT': '',
     }
 }
-
+```
 
 
 
 nano /root/list/main_files/urls.py
 
-
+```
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -303,7 +315,7 @@ urlpatterns = [
 urlpatterns += staticfiles_urlpatterns()
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+```
 
 # Загрузка файлов с помощью CyberDuck
 
@@ -322,6 +334,9 @@ mkdir /opt/list/static
 mkdir /opt/list/media
 mkdir /opt/list/media/cache
 chmod -R 777 /opt
+chmod -R 777 /opt/list
+chmod -R 777 /opt/list/static
+
 
 
 
@@ -361,7 +376,7 @@ Welcome to nginx! или Стандартный ответ джанки на с�
 deactivate
 cd /etc/nginx/sites-available
 sudo nano /etc/nginx/sites-available/list
-
+```
 upstream 95.213.191.108:8000 {
     server localhost:8000 fail_timeout=0;
 }
@@ -388,7 +403,7 @@ server {
     }
 }
 
-
+```
 
 
 Копирование ярлыка в основной nginx файл
@@ -453,7 +468,7 @@ django-admin.py startproject main_files .
 # Adjust the Project Settings
 
 nano /root/list/main_files/settings.py
-
+```
 import datetime
 import os
 
@@ -593,14 +608,14 @@ JWT_AUTH = {
 }
 
 
-
+```
 
 
 
 
 nano /root/list/main_files/secret_settings.py
 
-
+```
 import os
 
 SERVER = 'BATTLE'
@@ -643,12 +658,10 @@ DATABASES = {
         'PORT': '',
     }
 }
-
-
+```
 
 ### nano /root/list/main_files/urls.py
-
-
+```
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -700,6 +713,7 @@ urlpatterns += staticfiles_urlpatterns()
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+```
 
 # Загрузка файлов с помощью CyberDuck
 
@@ -816,13 +830,5 @@ command=/root/list/env/bin/gunicorn --bind 0.0.0.0:8000 main_files.wsgi:applicat
 directory=/root/list
 
 supervisorctl update
-
-
-
-
-
-
-ssh root@95.213.191.108
-9ro95m3ov5
 
 

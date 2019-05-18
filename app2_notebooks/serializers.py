@@ -23,7 +23,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 # class PointSerializer(serializers.ModelSerializer):
 #
-#     class Meta:
+#     class Meta
 #         model = Point
 #         fields = '__all__'
 
@@ -31,7 +31,6 @@ class NoteSerializer(serializers.ModelSerializer):
 class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
-        # fields = ('id', 'title', 'parent_point')
         fields = '__all__'
 
     def get_fields(self):

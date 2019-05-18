@@ -145,7 +145,7 @@ class Point(models.Model):
         db_table = 'point'
         verbose_name_plural = '1.1.2 Point'
         verbose_name = 'Point'
-        ordering = ["user_id", "note", "ordering_number", "id", "title"]
+        ordering = ["user_id", "note", "is_crossed", "ordering_number", "title", "id"]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,)
     note = models.ForeignKey(Note, null=True, on_delete=models.SET_NULL)
     ordering_number = models.IntegerField(verbose_name="Номер", null=True, blank=True)

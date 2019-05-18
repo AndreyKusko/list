@@ -10,8 +10,6 @@ User = get_user_model()
 def home(request):
     if request.user.is_authenticated:
         library, created = Library.objects.get_or_create(user=request.user)
-        # Notebook.objects.all().delete()
-        # Note.objects.all().delete()
         notebooks = Notebook.objects.filter(library=library)
 
         context = {
@@ -74,11 +72,10 @@ class NotebookApiView(viewsets.ModelViewSet):
             serializer = self.serializer_class(model, many=False)
             return Response(serializer.data)
         else:
-            qwe = self.model.__name__
+            # qwe = self.model.__name__
             raise ValueError('Notebook id required')
 
     def destroy(self, request, *args, **kwargs):
-    # def delete(self, request, *args, **kwargs):
         model_id = kwargs.get('pk')
         model = get_object_or_404(self.model, id=model_id, user=request.user)
         model.is_deleted = True
@@ -100,7 +97,6 @@ class NoteApiView(viewsets.ModelViewSet):
         notebook_id = request.query_params.get('notebook_id', None)
         if notebook_id:
             queryset = self.model.objects.filter(notebook_id=notebook_id, user=request.user)
-            # queryset = get_object_or_404(self.model, id=request.query_params['note_id'], user=request.user)
             serializer = self.serializer_class(queryset, many=True)
             return Response(serializer.data)
         else:
@@ -184,7 +180,7 @@ class PointApiView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         note_id = self.request.query_params.get('note_id', None)
         if note_id:
-            queryset = self.model.objects.filter(is_deleted=False, note_id=note_id, user=self.request.user)
+            queryset = self.model.objects.filter(is_deleted=False, note_id=note_id, user=self.request.user).order_by("is_crossed", "ordering_number", "title", "id")
             serializer = self.serializer_class(queryset, many=True)
             return Response(serializer.data)
         else:
@@ -245,6 +241,5 @@ class PointApiView(viewsets.ModelViewSet):
         model = get_object_or_404(self.model, id=model_id, user=request.user)
         model.is_deleted = True
         model.save(update_fields=['is_deleted'])
-
         serializer = self.serializer_class(model, many=False)
         return Response(serializer.data)

@@ -410,7 +410,7 @@ class ActionStampCounterViewSet(AbstractPointCounterViewSet):
                 .aggregate(action='action', num='count()') \
                 .group_by('action')
 
-            # copy actions_ids to check if all actions are displayed in statistic (there are no records if nothing happend)
+            # copy actionsRTRIM_ids to check if all actions are displayed in statistic (there are no records if nothing happend)
             check_actions_list = list(actions_ids)
 
             for action_stamp in action_stamps_internal:
@@ -452,9 +452,375 @@ Kusko, [8 февр. 2019 г., 12:19:51]:
             del results_values[action_id]['total_results_values']
             results.append(results_values[action_id])
 
+
         self.form_metadata(total_agrgated_values, aggregated)
         print('time wasted=', (time.time()-global_start), 'sec')
 
         return [results, aggregated]
 """
+
+
+
+
+
+
+import time
+num = 1000000
+
+
+def rty1():
+    qwe = 0
+    list_ = []
+    for n in range(num):
+        list_.append(n)
+    print('for in (for iteger in list_)')
+    t = time.time()
+    for iteger in list_:
+        qwe += iteger
+    tt = time.time() - t
+    print(tt)
+
+
+def zxc1():
+    qwe = 0
+    list_ = []
+    for n in range(num):
+        list_.append(n)
+    print('enumerate (for index, iteger in enumerate(list_)')
+    t = time.time()
+    for index, iteger in enumerate(list_):
+        qwe += iteger
+    tt = time.time() - t
+    print(tt)
+
+
+def asd1():
+    qwe = 0
+    print('range (for i in range(num)')
+    t = time.time()
+    for i in range(num):
+        qwe += i
+    tt = time.time() - t
+    print(tt)
+
+
+def fgh1():
+    qwe = 0
+    list_ = []
+    for n in range(num):
+        list_.append(n)
+    print('while (while index < len(list_) - 1)')
+    t = time.time()
+    index = 0
+    while index < len(list_) - 1:
+        qwe += list_[index]
+        index += 1
+    tt = time.time() - t
+    print(tt)
+
+
+rty1()
+zxc1()
+asd1()
+fgh1()
+
+
+objects = ['d', 'ff', 'ggg', 'q', 'ww', 'ee']
+objects = ['d', 'f', 'g', 'q', 'w', 'r']
+
+
+def get_first_matching_object(predicate, objects_=list()):
+    for obj in objects_:
+        if predicate(obj):
+            return obj
+    return None
+
+
+def asd(w):
+    if len(w) == 2:
+        return 1
+    else:
+        return 0
+
+
+http://www.postgresqltutorial.com/postgresql-select/
+https://andreyex.ru/bazy-dannyx/uchebnoe-posobie-po-sql/14-naibolee-chasto-ispolzuemyx-zaprosov-sql-vopros-otvet/
+https://chartio.com/resources/tutorials/how-to-list-databases-and-tables-in-postgresql-using-psql/
+http://www.postgresqltutorial.com/postgresql-create-table/
+https://www.postgresql.org/docs/9.2/rowtypes.html
+https://mode.com/blog/postgres-sql-date-functions
+
+
+sudo su - postgres
+psql
+CREATE DATABASE qwe_db;
+\q
+psql qwe_db
+psql
+or \c qwe_db
+
+CREATE TABLE mytable (
+    name varchar(80)
+)
+\dt
+
+INSERT INTO mytable (name) VALUES ('q'), ('w'), ('w'), ('w'), ('d'), ('v'), ('v'), ('f'),('d'), ('f');
+# посчитать все одинаковые значения
+SELECT name, COUNT(*) FROM mytable GROUP BY name;
+
+SELECT name, COUNT(*) FROM information_schema.tables GROUP BY name;
+SELECT * FROM information_schema.columns where table_schema = 'information_schema';
+SELECT * FROM ONLY;
+
+n = 1
+
+
+
+information_schema.tables
+information_schema.columns
+
+
+# показать список всех баз данных
+\list
+                                     List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |      Access privileges
+-----------+----------+----------+-------------+-------------+------------------------------
+ list_db   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =Tc/postgres                +
+           |          |          |             |             | postgres=CTc/postgres       +
+           |          |          |             |             | list_alpha_user=CTc/postgres
+ mydb      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ qwe_db    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |sudo su - postgres
+
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres                 +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres                 +
+           |          |          |             |             | postgres=CTc/postgres
+
+
+
+INSERT INTO Books VALUES(1001, 'Who will cry when you die', 299);
+
+
+
+
+sudo su - postgres
+psql
+psql qwe_db
+CREATE TABLE qwe_table (
+ product varchar(80),
+ updated TIMESTAMP,
+ price integer
+);
+INSERT INTO qwe_table VALUES \
+    ('яблоко', to_timestamp('16-05-2019 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 111),
+    ('яблоко', to_timestamp('16-05-2018 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 222),
+    ('яблоко', to_timestamp('16-05-2017 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 333),
+    ('апельсин', to_timestamp('16-05-2015 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 123),
+    ('манго', to_timestamp('16-05-2016 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 11),
+    ('манго', to_timestamp('16-04-2019 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 22),
+    ('манго', to_timestamp('16-03-2019 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 33),
+    ('мандарин', to_timestamp('16-04-2019 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 666),
+    ('маракуя', to_timestamp('16-05-2016 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 444)
+;
+INSERT INTO qwe_table VALUES \
+    ('аквамирин', to_timestamp('01-01-2019 0:00:00', 'dd-mm-yyyy hh24:mi:ss'), 123),
+    ('фейхуя', to_timestamp('16-05-2016 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 1),
+    ('фейхуя', to_timestamp('16-04-2017 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 2),
+    ('фейхуя', to_timestamp('16-04-2018 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 3),
+    ('фейхуя', to_timestamp('16-03-2019 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 4)
+;
+INSERT INTO qwe_table VALUES ('яблоко', to_timestamp('16-05-2011 15:36:38', 'dd-mm-yyyy hh24:mi:ss'), 111);
+
+
+INSERT INTO qwe_table
+ (ts_column)
+ VALUES
+ (TIMESTAMP '2011-05-16 15:36:38');
+
+http://www.postgresqltutorial.com/postgresql-insert/
+https://stackoverflow.com/questions/43499317/select-only-the-rows-with-the-latest-date-in-postgres
+
+SELECT * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+
+SELECT * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') ORDER BY updated
+SELECT * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') ORDER BY updated LIMIT 1;
+
+ORDER BY abs(session_date - date '$date_string')
+LIMIT 1;
+
+
+
+
+You do not need to create a bunch of views, just:
+
+# просто берет первую попавшуюся запись
+SELECT DISTINCT on(product) * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') ORDER BY product;
+SELECT DISTINCT on(product) * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss');
+
+
+#  упорядочит и и возьмет первую запись. В даном случае с самой большой датой но не больше 1 января 2019
+SELECT DISTINCT ON (product) n1.* FROM (
+    SELECT * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') ORDER BY updated DESC
+) n1;
+SELECT DISTINCT ON (product) * FROM (
+    SELECT * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') ORDER BY updated DESC
+) n1;
+
+
+
+
+
+https://stackoverflow.com/questions/13325583/postgresql-max-and-group-by
+
+# Выборка по максимальному полю
+SELECT product, MAX(updated) FROM qwe_table GROUP BY product
+
+#  упорядочит и и возьмет первую запись. В даном случае с самой большой датой но не больше 1 января 2019
+SELECT t1.* FROM (
+    SELECT product, MAX(updated) FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') GROUP BY product
+) t1;
+# или
+SELECT * FROM (
+    SELECT product, MAX(updated) FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') GROUP BY product
+) t1;
+
+
+SELECT updated FROM qwe_table LEFT JOIN updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+
+
+
+SELECT distinct on (a.date)
+    a.date date,
+    coalesce(b.date, a.date) last_date,
+    a.state,
+    a.id
+from test a
+left join test b
+on a.state = 2 and b.state = 1 and b.date < a.date
+order by a.date, b.date desc;
+
+import time
+
+
+def asd(predicate, objects=[]):
+    matching_query = (o for o in objects if predicate(o))
+    return matching_query
+
+
+def get_first_matching_object(predicate, objects=list()):
+    qwe = None
+    t = time.time()
+    for obj in objects:
+        if predicate(obj):
+            qwe = obj
+            break
+    print('time=', t-time.time())
+    return qwe
+
+
+
+
+
+
+
+
+  ABORT                            CLUSTER                          CREATE VIEW                      DROP USER MAPPING
+  ALTER AGGREGATE                  COMMENT                          DEALLOCATE                       DROP VIEW
+  ALTER COLLATION                  COMMIT                           DECLARE                          END
+  ALTER CONVERSION                 COMMIT PREPARED                  DELETE                           EXECUTE
+  ALTER DATABASE                   COPY                             DISCARD                          EXPLAIN
+  ALTER DEFAULT PRIVILEGES         CREATE ACCESS METHOD             DO                               FETCH
+  ALTER DOMAIN                     CREATE AGGREGATE                 DROP ACCESS METHOD               GRANT
+  ALTER EVENT TRIGGER              CREATE CAST                      DROP AGGREGATE                   IMPORT FOREIGN SCHEMA
+  ALTER EXTENSION                  CREATE COLLATION                 DROP CAST                        INSERT
+  ALTER FOREIGN DATA WRAPPER       CREATE CONVERSION                DROP COLLATION                   LISTEN
+  ALTER FOREIGN TABLE              CREATE DATABASE                  DROP CONVERSION                  LOAD
+  ALTER FUNCTION                   CREATE DOMAIN                    DROP DATABASE                    LOCK
+  ALTER GROUP                      CREATE EVENT TRIGGER             DROP DOMAIN                      MOVE
+  ALTER INDEX                      CREATE EXTENSION                 DROP EVENT TRIGGER               NOTIFY
+  ALTER LANGUAGE                   CREATE FOREIGN DATA WRAPPER      DROP EXTENSION                   PREPARE
+  ALTER LARGE OBJECT               CREATE FOREIGN TABLE             DROP FOREIGN DATA WRAPPER        PREPARE TRANSACTION
+  ALTER MATERIALIZED VIEW          CREATE FUNCTION                  DROP FOREIGN TABLE               REASSIGN OWNED
+  ALTER OPERATOR                   CREATE GROUP                     DROP FUNCTION                    REFRESH MATERIALIZED VIEW
+  ALTER OPERATOR CLASS             CREATE INDEX                     DROP GROUP                       REINDEX
+  ALTER OPERATOR FAMILY            CREATE LANGUAGE                  DROP INDEX                       RELEASE SAVEPOINT
+  ALTER POLICY                     CREATE MATERIALIZED VIEW         DROP LANGUAGE                    RESET
+  ALTER PUBLICATION                CREATE OPERATOR                  DROP MATERIALIZED VIEW           REVOKE
+  ALTER ROLE                       CREATE OPERATOR CLASS            DROP OPERATOR                    ROLLBACK
+  ALTER RULE                       CREATE OPERATOR FAMILY           DROP OPERATOR CLASS              ROLLBACK PREPARED
+  ALTER SCHEMA                     CREATE POLICY                    DROP OPERATOR FAMILY             ROLLBACK TO SAVEPOINT
+  ALTER SEQUENCE                   CREATE PUBLICATION               DROP OWNED                       SAVEPOINT
+  ALTER SERVER                     CREATE ROLE                      DROP POLICY                      SECURITY LABEL
+  ALTER STATISTICS                 CREATE RULE                      DROP PUBLICATION                 SELECT
+  ALTER SUBSCRIPTION               CREATE SCHEMA                    DROP ROLE                        SELECT INTO
+  ALTER SYSTEM                     CREATE SEQUENCE                  DROP RULE                        SET
+  ALTER TABLE                      CREATE SERVER                    DROP SCHEMA                      SET CONSTRAINTS
+  ALTER TABLESPACE                 CREATE STATISTICS                DROP SEQUENCE                    SET ROLE
+  ALTER TEXT SEARCH CONFIGURATION  CREATE SUBSCRIPTION              DROP SERVER                      SET SESSION AUTHORIZATION
+  ALTER TEXT SEARCH DICTIONARY     CREATE TABLE                     DROP STATISTICS                  SET TRANSACTION
+  ALTER TEXT SEARCH PARSER         CREATE TABLE AS                  DROP SUBSCRIPTION                SHOW
+  ALTER TEXT SEARCH TEMPLATE       CREATE TABLESPACE                DROP TABLE                       START TRANSACTION
+  ALTER TRIGGER                    CREATE TEXT SEARCH CONFIGURATION DROP TABLESPACE                  TABLE
+  ALTER TYPE                       CREATE TEXT SEARCH DICTIONARY    DROP TEXT SEARCH CONFIGURATION   TRUNCATE
+  ALTER USER                       CREATE TEXT SEARCH PARSER        DROP TEXT SEARCH DICTIONARY      UNLISTEN
+  ALTER USER MAPPING               CREATE TEXT SEARCH TEMPLATE      DROP TEXT SEARCH PARSER          UPDATE
+  ALTER VIEW                       CREATE TRANSFORM                 DROP TEXT SEARCH TEMPLATE        VACUUM
+  ANALYZE                          CREATE TRIGGER                   DROP TRANSFORM                   VALUES
+  BEGIN                            CREATE TYPE                      DROP TRIGGER                     WITH
+  CHECKPOINT                       CREATE USER                      DROP TYPE
+  CLOSE                            CREATE USER MAPPING              DROP USER
+
+
+
+predicate(object) - что это вообще за запись? она багнется, если там вызывается функция, то следует записать predicate(obj)
+
+(obj for obj in objects if predicate(object)) - нужно генерировать список:
+[obj for obj in objects if predicate(object)]
+или преобразовать matching_objects в список
+matching_objects = list(matching_objects)
+
+вроде лучше не не очень хорошая практика использовать названия аргументов и переменных, похожих на системные названия (objects и object). Но если очень сильно нужно - следует добавить нижнее подчеркивание в конце objects_ object_
+
+Нет смысла продолжать итерацию, если мы уже нашли совпадение, так?
+
+def get_first_matching_object(predicate, objects_=list()):
+    for obj in objects_:
+        if predicate(obj):
+            return obj
+    return None
+
+
+
+
+
+
+Это вопрос с подвохом? вроде легко же считается
+пусть таблица в дб называется mytable
+
+SELECT name, COUNT(*) FROM qwe_table GROUP BY name;
+
+
+
+
+
+Изучал запросы к бд больше года назад. Немного подзабыл как писать запросы :)
+Пусть дата у нас хранится в виде timestamp
+
+target_time = "2019-01-01 00:00:00"
+time_format = "yyyy-mm-dd hh24:mi:ss"
+
+
+Можно отсортировать по каким-нибудь показателям (в данном случае по времени обновления) и исключить все кроме первых попавшихся (ну первый будет максимальным)
+
+SELECT DISTINCT ON (product) * FROM (
+    SELECT * FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') ORDER BY updated DESC
+) n1;
+
+или сгруппировать по названию, отфильтровать все обновления после 1 января 2019 и взять значения с самым поздним временем обновления
+
+SELECT * FROM (
+    SELECT product, MAX(updated) FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') GROUP BY product
+) t1;
+
 
