@@ -10,8 +10,8 @@ User = get_user_model()
 def home(request):
     if request.user.is_authenticated:
         library, created = Library.objects.get_or_create(user=request.user)
+        # Note.objects.all().delete()
         notebooks = Notebook.objects.filter(library=library)
-
         context = {
             "library": library,
             "notebooks": notebooks,
@@ -95,6 +95,7 @@ class NoteApiView(viewsets.ModelViewSet):
 
     def list(self, request):
         notebook_id = request.query_params.get('notebook_id', None)
+
         if notebook_id:
             queryset = self.model.objects.filter(notebook_id=notebook_id, user=request.user)
             serializer = self.serializer_class(queryset, many=True)

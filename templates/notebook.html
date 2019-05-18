@@ -372,7 +372,6 @@
                 <ul class="notes_list_note_sub_points_list">
                     <li class="notes_list_note_points_list_point"
                         ng-repeat="point in point.sub_points"
-                        ng-if="!point.is_deleted"
                         ng-include="'field_renderer.html'"
                     ></li>
                     <li class="notes_list_note_points_list_new_point"
@@ -489,7 +488,7 @@
                         <div class="notes_list_note_points">
                             <ul class="notes_list_note_points_list">
                                 <li class="notes_list_note_points_list_point"
-                                        ng-repeat="point in note.points track by $index "
+                                        ng-repeat="point in note.points | orderBy: is_crossed  track by $index "
                                         ng-if="!point.parent_point"
                                         ng-class="{deleted: point.is_deleted == true}"
                                 >
@@ -531,7 +530,6 @@
                                     >
                                         <li class="notes_list_note_points_list_point"
                                             ng-class="{deleted: point.is_deleted == true}"
-                                            ng-if="!point.is_deleted"
                                             ng-repeat="point in point.sub_points"
                                             ng-include="'field_renderer.html'"
                                         >

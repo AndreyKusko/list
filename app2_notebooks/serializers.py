@@ -32,11 +32,25 @@ class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
         fields = '__all__'
+    #
+    sub_points = serializers.SerializerMethodField(
+        read_only=True, method_name="get_child_points")
 
-    def get_fields(self):
-        fields = super(PointSerializer, self).get_fields()
-        fields['sub_points'] = PointSerializer(many=True)
-        return fields
+    def get_child_points(self, obj):
+        """ self referral field """
+        serializer = PointSerializer(
+            instance=obj.sub_points.filter(is_deleted=False),
+            many=True
+        )
+        return serializer.data
+
+    # def get_fields(self):
+    #     fields = super(PointSerializer, self).get_fields()
+    #     fields['sub_points'] = PointSerializer(instance=Point.objects.filter(is_deleted=False), many=True)
+    #     return fields
+
+
+
 
 # class SubPointSerializer(serializers.ModelSerializer):
 #     class Meta:

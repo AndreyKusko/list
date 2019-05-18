@@ -151,7 +151,8 @@ class Point(models.Model):
     ordering_number = models.IntegerField(verbose_name="Номер", null=True, blank=True)
     title = models.CharField(max_length=120, verbose_name="Название", null=True, blank=True)
 
-    parent_point = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name='sub_points')
+    # parent_point = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name='sub_points')
+    parent_point = models.ForeignKey('Point', blank=True, null=True, on_delete=models.CASCADE, related_name='sub_points')
 
     text = models.TextField(default=False, max_length=3000, verbose_name="Текст", null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name="is_active")
