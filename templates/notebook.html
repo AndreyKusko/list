@@ -557,8 +557,7 @@
                                         ng-if="point.sub_points.length != 0 || point.edit_block"
                                     >
                                         <li class="notes_list_note_points_list_point"
-                                            ng-class="{deleted: point.is_deleted == true}"
-                                            ng-repeat="point in point.sub_points"
+                                            ng-class="{deleted: point.is_deleted == true}"  Jng-repeat="point in point.sub_points"
                                             ng-include="'field_renderer.html'"
                                         >
                                         </li>
@@ -567,7 +566,7 @@
                                             <input class="form-control notes_list_note_points_list_new_point_input"
                                                     type="text"
                                                     placeholder="New sub point"
-                                                    ng-model='point.new_sub_point_title_input'
+                                                   ng-model='point.new_sub_point_title_input'
                                             >
                                             <img class="notes_list_note_points_list_new_point_add_btn"
                                                     ng-click="editPoint($index, note, point, 'new')"

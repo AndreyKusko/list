@@ -310,6 +310,7 @@
     container {
         width: 100%;
     }
+
 {# change bootstrap style #}
     .bmd-form-group {
         bmd-form-group: none
@@ -327,6 +328,12 @@
         text-decoration: line-through red;
     }
 
+    .ninja_mark_login_ahoy {
+        margin-top: 8em;
+        margin-bottom: 8em;
+        width: 31em;
+        text-align: left;
+    }
 
     .header_navbar {
         position: sticky;
@@ -707,7 +714,9 @@
 
             </div>
             <div class="nav justify-content-end float-right header_navbar_auth">
-                <div class="header_navbar_auth_logged" ng-if="loggedInUser">
+                <div class="header_navbar_auth_logged"
+                        ng-if="loggedInUser"
+                >
                     <div class="text-right header_navbar_auth_logged_txt"
                             ng-cloak
                     >
@@ -772,9 +781,30 @@
             </div>
         </header>
     {% endverbatim %}
-
     <container class="row" ng-controller="NotebookController">
         {% verbatim %}
+            <div class="offset-2 offset-md-2 ninja_mark_login_ahoy"
+                    ng-if="!loggedInUser"
+            >
+                A-hoy!
+                <br>
+                <br>
+                I am Mark and I exist to store your notes or lists or other marks (o_O)
+                or anything else you do not want to store on your something.
+                <br>
+                <br>
+                You are allowed to SignUp and Login in that form if you dare.
+                <br>
+                <br>
+                Btw by clicking any buttons you agree to the ridiculously long terms
+                and agreements that you didn't bother to read and I write.
+                <br>
+                <br>
+                Sometimes I feel like a pirate Mark.
+                <br>
+                AYE AYE!
+            </div>
+
             <div class="bd-sidebar sidebar_navbar" ng-cloak ng-if="loggedInUser">
                 <div class=" sidebar_navbar_search">
                     <button class="btn bmd-btn-icon" for="search" aria-expanded="false" >
