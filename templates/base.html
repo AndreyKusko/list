@@ -316,8 +316,11 @@
     }
 {# global style #}
     .deleted {
-        border: 2px solid red;
-
+        border: 1px solid #E53935;
+        border-radius:0.3em;
+	    background-image: -webkit-linear-gradient(-90deg,    transparent 0%,    transparent 50%, white 50%, white 100%),
+                  -webkit-linear-gradient(  0deg, rgba(229, 57, 53, 0.15) 0%, rgba(229, 57, 53, 0.15) 50%, white 50%, white 100%);
+        background-size:.5em .5em;
     }
     .crossed {
         {#text-decoration: line-through double red;#}
@@ -585,22 +588,26 @@
                         }
                 .notes_list_note_points {
                     margin:0;
-                    padding:10px 10px 0 20px;
+                    padding:0.8em 0.7em 0 0.8em;
                 }
                     .notes_list_note_points_list {
                         list-style-type:none;
-                        padding:0 0 0 10px;
+                        padding:0 0 0 0.5em;
                     }
                     .notes_list_note_sub_points_list {
                         list-style-type:none;
-                        padding:0 0 0 0.8em;
+                        padding:0 0 0 0.5em;
                         border-left:1px solid rgba(0,0,0,0.3);
                     }
                         .notes_list_note_points_list_point {
+                            dispaly: block;
+                            margin:0.2em 0;
+                            padding:0.2em 0 0em 0.4em;
+                            {#border:1px solid red#}
                         }
                             .notes_list_note_points_list_point_title {
                                 cursor:pointer;
-                                margin:7px 0 -6px 0;
+                                margin:0px 0 -0.3em 0;
                                 {#margin:0;#}
                                 padding:0;
                                 {#margin-left:10px;#}
