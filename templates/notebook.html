@@ -421,15 +421,6 @@
                         ng-model='notebook_title_input[notebooksList[curent_notebook_index].id]'
                     >
                     <br>
-                    <button class="btn btn-outline-secondary notebook_edit_form_save_btn"
-                            type="button"
-                            ng-click="
-                                editNotebook(curent_notebook_index, notebooksList[curent_notebook_index].id, 'edit');
-                                notebooksList[curent_notebook_index].edit_block = !notebooksList[curent_notebook_index].edit_block
-                            "
-                    >
-                        edit
-                    </button>
                     <button class="btn btn-outline-secondary notebook_edit_form_delete_btn"
                             type="button"
                             ng-click="
@@ -439,9 +430,19 @@
                     >
                         delete
                     </button>
+                    <button class="btn btn-outline-secondary notebook_edit_form_save_btn"
+                            type="button"
+                            ng-click="
+                                editNotebook(curent_notebook_index, notebooksList[curent_notebook_index].id, 'edit');
+                                notebooksList[curent_notebook_index].edit_block = !notebooksList[curent_notebook_index].edit_block
+                            "
+                    >
+                        edit
+                    </button>
+
                 </div>
-                <div class="list_create_form">
-                    <div class="form-group"> <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                <div class="form-group list_create_form">
+                    <div class=""> <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
                         <label class="bmd-label-floating"
                             for="formGroupExampleInput"
                         >
@@ -452,7 +453,7 @@
                             id="formGroupExampleInput"
                             type="text"
                         >
-                        <button class="btn btn-outline-secondary"
+                        <button class="btn btn-outline-secondary list_create_form_create_btn"
                                 type="button"
                                 ng-click="editNote(0, 0, 'is_list')"
                         >
