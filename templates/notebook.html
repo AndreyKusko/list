@@ -337,37 +337,44 @@
             <!-- nested list -->
             <script id="field_renderer.html" type="text/ng-template" >
                 <span class="point_title notes_list_note_points_list_point_title"
+                        ng-if="!point.edit_block"
                         ng-click="editPoint($index, note, point, 'cross_out')"
                         ng-class="{crossed: point.is_crossed == true}"
                 >
                     {{ point.title }}
                 </span>
-                <img class="notes_list_note_points_list_point_edit_icon"
-                        src="/static/baseline-more_vert-24px.svg"
-                        ng-click="point.edit_block = !point.edit_block"
-                />
-
-                <p class="notes_list_note_points_list_point_form"
-                   ng-if="point.edit_block"
+                <span class="notes_list_note_points_list_point_form"
+                        ng-if="point.edit_block"
                 >
                     <input class="form-control notes_list_note_points_list_point_form_input"
                         type="text"
                         ng-value="point.title"
                         ng-model='point.point_title_input'
                     >
-                    <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_save_btn"
-                            type="button"
-                            ng-click="editPoint($index, note, point, 'change'); point.edit_block = !point.edit_block"
-                    >
-                        edit
-                    </button>
                     <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_delete_btn"
                             type="button"
                             ng-click="deletePoint($index, note, point)"
                     >
                         delete
                     </button>
-                </p>
+                    <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_save_btn"
+                            type="button"
+                            ng-click="editPoint($index, note, point, 'change'); point.edit_block = !point.edit_block"
+                    >
+                        edit
+                    </button>
+                </span>
+                <img class="notes_list_note_points_list_point_edit_icon"
+                        src="/static/baseline-more_vert-24px.svg"
+                        ng-if="!point.edit_block"
+                        ng-click="point.edit_block = !point.edit_block"
+                />
+                <img class="notes_list_note_points_list_point_edit_icon"
+                        src="/static/outline-more_horiz-24px.svg"
+                        ng-if="point.edit_block"
+                        ng-click="point.edit_block = !point.edit_block"
+                />
+
 
                 <ul class="notes_list_note_sub_points_list">
                     <li class="notes_list_note_points_list_point"
@@ -395,6 +402,12 @@
                     </h2>
                     <img    class="notebook_title_edit_icon"
                             src="/static/baseline-more_vert-24px.svg"
+                            ng-if="!notebooksList[curent_notebook_index].edit_block"
+                            ng-click="notebooksList[curent_notebook_index].edit_block = !notebooksList[curent_notebook_index].edit_block"
+                    />
+                    <img class="notes_list_note_points_list_point_edit_icon"
+                            src="/static/outline-more_horiz-24px.svg"
+                            ng-if="notebooksList[curent_notebook_index].edit_block"
                             ng-click="notebooksList[curent_notebook_index].edit_block = !notebooksList[curent_notebook_index].edit_block"
                     />
                 </div>
@@ -459,7 +472,13 @@
                                 {{ note.title }}
                             </h2>
                             <img class="notes_list_note_edit_icon"
+                                    ng-if="!note.edit_block"
                                     src="/static/baseline-more_vert-24px.svg"
+                                    ng-click="note.edit_block = !note.edit_block"
+                            />
+                            <img class="notes_list_note_points_list_point_edit_icon"
+                                    src="/static/outline-more_horiz-24px.svg"
+                                    ng-if="note.edit_block"
                                     ng-click="note.edit_block = !note.edit_block"
                             />
 
@@ -493,17 +512,13 @@
                                         ng-class="{deleted: point.is_deleted == true}"
                                 >
                                     <span class="notes_list_note_points_list_point_title"
+                                            ng-if="!point.edit_block"
                                             ng-click="editPoint($index, note, point, 'cross_out')"
                                             ng-class="{crossed: point.is_crossed == true}"
                                     >
                                         {{ point.title }}
                                     </span>
-                                    <img class="notes_list_note_points_list_point_edit_icon"
-                                            src="/static/baseline-more_vert-24px.svg"
-                                            ng-click="point.edit_block = !point.edit_block"
-                                    />
-
-                                    <p class="notes_list_note_points_list_point_form"
+                                    <span class="notes_list_note_points_list_point_form"
                                        ng-if="point.edit_block"
                                     >
                                         <input class="form-control notes_list_note_points_list_point_form_input"
@@ -511,19 +526,30 @@
                                             ng-value="point.title"
                                             ng-model='point.point_title_input'
                                         >
-                                        <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_save_btn"
-                                                type="button"
-                                                ng-click="editPoint($index, note, point, 'change'); point.edit_block = !point.edit_block"
-                                        >
-                                            edit
-                                        </button>
                                         <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_delete_btn"
                                                 type="button"
                                                 ng-click="deletePoint($index, note, point)"
                                         >
                                             delete
                                         </button>
-                                    </p>
+                                        <button class="btn btn-outline-secondary notes_list_note_points_list_point_form_save_btn"
+                                                type="button"
+                                                ng-click="editPoint($index, note, point, 'change'); point.edit_block = !point.edit_block"
+                                        >
+                                            edit
+                                        </button>
+                                    </span>
+                                    <img class="notes_list_note_points_list_point_edit_icon"
+                                            src="/static/baseline-more_vert-24px.svg"
+                                            ng-if="!point.edit_block"
+                                            ng-click="point.edit_block = !point.edit_block"
+                                    />
+                                    <img class="notes_list_note_points_list_point_edit_icon"
+                                            src="/static/outline-more_horiz-24px.svg"
+                                            ng-if="point.edit_block"
+                                            ng-click="point.edit_block = !point.edit_block"
+                                    />
+
 
                                     <ul class="notes_list_note_sub_points_list"
                                         ng-if="point.sub_points.length != 0 || point.edit_block"
