@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework_jwt.views import obtain_jwt_token
 
+from .views import apple_touch_icon
 from app1_accounts.views import LibraryApiView, UserAPIView
 from app2_notebooks.views import *
 
@@ -27,6 +28,9 @@ urlpatterns = [
 
     url(r'^notebook/(?P<notebook_id>\d+)/$', notebook, name='notebook'),
     url(r'^api/', include((router.urls, 'app_name'), namespace='instance_name')),
+
+    url(r'^apple-touch-icon.png/$', apple_touch_icon),
+
 
     url(r'^$', home, name='home'),
 ]
