@@ -1,3 +1,79 @@
+import time
+
+def my_deco(func):
+    qwe =  time.time()
+
+    def wrapper(*args, **kwargs):
+    	try:
+    	    return func(*args, **kwargs)
+        except Exception as e:
+		    pass
+    print(time.time() - qwe)
+	return wrapper
+
+
+def my_generation(arr):
+	for i in arr:
+		yield i
+
+qwe = [1,4,2,23,5,6,2,23]
+
+@my_deco
+def bubble_sort(list_):
+	sort = True
+	while sort:
+		sort = False
+		for index, element in enumerate(list_):
+			if index != 0:
+				if element < list_[index-1]:
+					list_[index], list_[index-1] = list_[index-1], list_[index]
+					sort = True
+	return list_
+
+print(bubble_sort(qwe))
+
+
+
+
+
+qwe = [5,4,7,3,8,5,4,2,1,2,3,4,5,8,8,9,9,5,0,0]
+
+
+def merge(left_list_, right_list_):
+    left_coursor, right_coursor = 0, 0
+    sorted_list_ = []
+
+    while left_coursor < len(left_list_) or right_coursor < len(right_list_):
+
+        print('left_coursor=', left_coursor, 'len(left_list_)=', len(left_list_), 'right_coursor=', right_coursor, 'len(right_list_)=', len(right_list_))
+
+        if left_list_[left_coursor] <= right_list_[right_coursor]:
+            print('|    left_list_[left_coursor] <= right_list_[right_coursor]')
+            sorted_list_.append(left_list_[left_coursor])
+            left_coursor += 1
+        else:
+            print('|     else left_list_[left_coursor] <= right_list_[right_coursor]')
+
+            sorted_list_.append(right_list_[right_coursor])
+            right_coursor += 1
+    return sorted_list_
+
+
+def merge_sort(list_):
+    lenth = len(list_)
+    if lenth <= 1: # here we can add check if this list is sorted or any other "if"
+        return list_
+
+    mid = lenth // 2
+
+    return merge(list_[:mid], list_[mid:])
+
+
+print(merge_sort(qwe))
+
+
+
+
 
 Создание новых пунктов в новом списке.
 находилось в
@@ -690,86 +766,13 @@ SELECT updated FROM qwe_table LEFT JOIN updated < to_timestamp('2019-01-01 00:00
 
 
 
-SELECT distinct on (a.date)
-    a.date date,
-    coalesce(b.date, a.date) last_date,
-    a.state,
-    a.id
-from test a
-left join test b
-on a.state = 2 and b.state = 1 and b.date < a.date
-order by a.date, b.date desc;
 
-import time
-
-
-def asd(predicate, objects=[]):
-    matching_query = (o for o in objects if predicate(o))
-    return matching_query
-
-
-def get_first_matching_object(predicate, objects=list()):
-    qwe = None
-    t = time.time()
-    for obj in objects:
-        if predicate(obj):
-            qwe = obj
-            break
-    print('time=', t-time.time())
-    return qwe
+-----
+=====
 
 
 
 
-
-
-
-
-  ABORT                            CLUSTER                          CREATE VIEW                      DROP USER MAPPING
-  ALTER AGGREGATE                  COMMENT                          DEALLOCATE                       DROP VIEW
-  ALTER COLLATION                  COMMIT                           DECLARE                          END
-  ALTER CONVERSION                 COMMIT PREPARED                  DELETE                           EXECUTE
-  ALTER DATABASE                   COPY                             DISCARD                          EXPLAIN
-  ALTER DEFAULT PRIVILEGES         CREATE ACCESS METHOD             DO                               FETCH
-  ALTER DOMAIN                     CREATE AGGREGATE                 DROP ACCESS METHOD               GRANT
-  ALTER EVENT TRIGGER              CREATE CAST                      DROP AGGREGATE                   IMPORT FOREIGN SCHEMA
-  ALTER EXTENSION                  CREATE COLLATION                 DROP CAST                        INSERT
-  ALTER FOREIGN DATA WRAPPER       CREATE CONVERSION                DROP COLLATION                   LISTEN
-  ALTER FOREIGN TABLE              CREATE DATABASE                  DROP CONVERSION                  LOAD
-  ALTER FUNCTION                   CREATE DOMAIN                    DROP DATABASE                    LOCK
-  ALTER GROUP                      CREATE EVENT TRIGGER             DROP DOMAIN                      MOVE
-  ALTER INDEX                      CREATE EXTENSION                 DROP EVENT TRIGGER               NOTIFY
-  ALTER LANGUAGE                   CREATE FOREIGN DATA WRAPPER      DROP EXTENSION                   PREPARE
-  ALTER LARGE OBJECT               CREATE FOREIGN TABLE             DROP FOREIGN DATA WRAPPER        PREPARE TRANSACTION
-  ALTER MATERIALIZED VIEW          CREATE FUNCTION                  DROP FOREIGN TABLE               REASSIGN OWNED
-  ALTER OPERATOR                   CREATE GROUP                     DROP FUNCTION                    REFRESH MATERIALIZED VIEW
-  ALTER OPERATOR CLASS             CREATE INDEX                     DROP GROUP                       REINDEX
-  ALTER OPERATOR FAMILY            CREATE LANGUAGE                  DROP INDEX                       RELEASE SAVEPOINT
-  ALTER POLICY                     CREATE MATERIALIZED VIEW         DROP LANGUAGE                    RESET
-  ALTER PUBLICATION                CREATE OPERATOR                  DROP MATERIALIZED VIEW           REVOKE
-  ALTER ROLE                       CREATE OPERATOR CLASS            DROP OPERATOR                    ROLLBACK
-  ALTER RULE                       CREATE OPERATOR FAMILY           DROP OPERATOR CLASS              ROLLBACK PREPARED
-  ALTER SCHEMA                     CREATE POLICY                    DROP OPERATOR FAMILY             ROLLBACK TO SAVEPOINT
-  ALTER SEQUENCE                   CREATE PUBLICATION               DROP OWNED                       SAVEPOINT
-  ALTER SERVER                     CREATE ROLE                      DROP POLICY                      SECURITY LABEL
-  ALTER STATISTICS                 CREATE RULE                      DROP PUBLICATION                 SELECT
-  ALTER SUBSCRIPTION               CREATE SCHEMA                    DROP ROLE                        SELECT INTO
-  ALTER SYSTEM                     CREATE SEQUENCE                  DROP RULE                        SET
-  ALTER TABLE                      CREATE SERVER                    DROP SCHEMA                      SET CONSTRAINTS
-  ALTER TABLESPACE                 CREATE STATISTICS                DROP SEQUENCE                    SET ROLE
-  ALTER TEXT SEARCH CONFIGURATION  CREATE SUBSCRIPTION              DROP SERVER                      SET SESSION AUTHORIZATION
-  ALTER TEXT SEARCH DICTIONARY     CREATE TABLE                     DROP STATISTICS                  SET TRANSACTION
-  ALTER TEXT SEARCH PARSER         CREATE TABLE AS                  DROP SUBSCRIPTION                SHOW
-  ALTER TEXT SEARCH TEMPLATE       CREATE TABLESPACE                DROP TABLE                       START TRANSACTION
-  ALTER TRIGGER                    CREATE TEXT SEARCH CONFIGURATION DROP TABLESPACE                  TABLE
-  ALTER TYPE                       CREATE TEXT SEARCH DICTIONARY    DROP TEXT SEARCH CONFIGURATION   TRUNCATE
-  ALTER USER                       CREATE TEXT SEARCH PARSER        DROP TEXT SEARCH DICTIONARY      UNLISTEN
-  ALTER USER MAPPING               CREATE TEXT SEARCH TEMPLATE      DROP TEXT SEARCH PARSER          UPDATE
-  ALTER VIEW                       CREATE TRANSFORM                 DROP TEXT SEARCH TEMPLATE        VACUUM
-  ANALYZE                          CREATE TRIGGER                   DROP TRANSFORM                   VALUES
-  BEGIN                            CREATE TYPE                      DROP TRIGGER                     WITH
-  CHECKPOINT                       CREATE USER                      DROP TYPE
-  CLOSE                            CREATE USER MAPPING              DROP USER
 
 
 
@@ -822,5 +825,76 @@ SELECT DISTINCT ON (product) * FROM (
 SELECT * FROM (
     SELECT product, MAX(updated) FROM qwe_table WHERE updated < to_timestamp('2019-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss') GROUP BY product
 ) t1;
+
+
+
+
+docker image prune -f
+
+
+def heap_permutation(data, n):
+    if n == 1:
+        print(data)
+        return
+    for i in range(n):
+        heap_permutation(data, n - 1)
+        if n % 2 == 0:
+            data[i], data[n-1] = data[n-1], data[i]
+        else:
+            data[0], data[n-1] = data[n-1], data[0]
+
+
+
+
+
+
+
+create table price (
+  product varchar(100),
+  dt timestamp,
+  price numeric,
+  PRIMARY KEY (product, dt)
+);
+
+insert into price
+values
+('Air', date'2017-06-01', 100),
+('Air', date'2017-06-02', 200),
+('Air', date'2017-06-10', 1000),
+('Sunlight', date'2017-06-02', 300),
+('Sunlight', date'2017-06-05', 400)
+;
+
+select * from price;
+
+select * distinct on (product) from price group by product
+
+
+SELECT DISTINCT ON (product) * FROM (
+    SELECT * FROM price WHERE dt < date'2017-06-06' ORDER BY dt DESC
+) n1;
+
+
+
+
+
+
+
+
+def heap_permutation(data, n):
+    if n == 1:
+        print(data)
+        return
+    for i in range(n):
+        heap_permutation(data, n - 1)
+        if n % 2 == 0:
+            data[i], data[n-1] = data[n-1], data[i]
+        else:
+            data[0], data[n-1] = data[n-1], data[0]
+
+data = [1, 2, 3]
+heap_permutation(data, len(data))
+
+
 
 

@@ -29,7 +29,6 @@ def notebook(request, notebook_id):
     return render(request, "notebook.html", context)
 
 
-# class NotebookApiView(APIView):
 class NotebookApiView(viewsets.ModelViewSet):
     model = Notebook
     permission_classes = [IsAuthenticated]
@@ -85,7 +84,6 @@ class NotebookApiView(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-# class NoteApiView(APIView):
 class NoteApiView(viewsets.ModelViewSet):
     model = Note
     permission_classes = [IsAuthenticated]
@@ -164,9 +162,6 @@ class NoteApiView(viewsets.ModelViewSet):
         return queryset
 
 
-# class PointApiView(APIView):
-# class PointApiView(generics.GenericAPIView):
-# class PointApiView(viewsets.ViewSet):
 class PointApiView(viewsets.ModelViewSet):
     model = Point
     permission_classes = [IsAuthenticated]
@@ -206,7 +201,6 @@ class PointApiView(viewsets.ModelViewSet):
         model.text = request.data.get('text', '')
         model.active = request.data.get('active', True)
         model.hidden_note = request.data.get('hidden_note', '')
-
         model.save()
 
         serializer = self.serializer_class(model, many=False)
