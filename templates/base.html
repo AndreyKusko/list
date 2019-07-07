@@ -273,6 +273,7 @@
 </script>
 
 <style>
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -287,7 +288,7 @@
   --white: #fff;
   --gray: #6c757d;
   --gray-dark: #343a40;
-  --primary: #007bff;
+  --primary: #007bff; 
   --secondary: #6c757d;
   --success: #28a745;
   --info: #17a2b8;
@@ -300,18 +301,26 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
+
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
-
-
     body {
         font-family: "Helvetica Neue", Helvetica,Arial,sans-serif;
         font-size: 16px;
         font-weight:400;
         line-height: 1.4;
     }
+    a {
+        color: #00000 !important;
+        text-color: #00000;
 
+    }
+    a.text-primary {
+        color: #00000 !important;
+        text-color: #00000;
+
+    }
     container {
         width: 100%;
     }
@@ -346,6 +355,8 @@
         z-index: 1000;
         padding:0 0.6em;
         flex-flow: wrap;
+        color: #808080;
+        background-color:#343d46;
     }
         .header_navbar_logged {
             height:3em
@@ -469,9 +480,11 @@
         position: sticky;
         z-index: 1000;
         width: 15em;
+        background-color: #4f5b66;
     }
         .sidebar_navbar_search {
             padding: .8em 0 .5em .6em;
+            background-color: #4f5b66;
         }
             .sidebar_navbar_search button {
                 display: inline-block;
@@ -481,7 +494,29 @@
                 margin:0;
                 padding:0;
                 width: 83%;
-             }
+                color: rgba(0,0,0,.87);
+            }
+            .sidebar_navbar_search_input {
+                color: #f5f5f5;
+            }
+        .sidebar_navbar_search_input:focus {
+                color: #f5f5f5;
+            }
+            .sidebar_navbar_search_input::-webkit-input-placeholder {
+              color: #121212;
+            }
+
+            .sidebar_navbar_search_input:-moz-placeholder {
+              color: #121212;
+            }
+
+            .sidebar_navbar_search_input::-moz-placeholder {
+              color: #121212;
+            }
+
+            .sidebar_navbar_search_input:-ms-input-placeholder {
+              color: #121212;
+            }
 
         .sidebar_navbar_notebooks {
             border-top: 1px solid rgba(0,0,0,.1);
@@ -497,7 +532,17 @@
             .sidebar_navbar_notebooks_list {
                 padding:0;
                 width:100%;
+                background-color: #65737e;
             }
+            .sidebar_navbar_notebooks_list_link {
+                color: #f5f5f5;
+                font-size: 14pt;
+            }
+            .sidebar_navbar_notebooks_list_link:hover {
+                text-decoration: underline;
+                color: #FFFFFF;
+            }
+
             .sidebar_navbar_create_notebook {}
                 .sidebar_navbar_create_notebook_btn {
                     margin-top: 0.8em;
@@ -737,12 +782,11 @@
         <header
             class="
                 navbar navbar-expand navbar-light bd-navbar
-
-                bg-light
                 justify-content-between
                 col-12
-                header_navbar
                 text-center
+
+                header_navbar
             "
             ng-class="{header_navbar_logged: loggedInUser}"
         >
@@ -816,17 +860,32 @@
                 <div class="header_navbar_auth_logged"
                         ng-if="loggedInUser"
                 >
-                    <div class="text-right header_navbar_auth_logged_txt"
+                    <div
+                        class="
+                            text-right
+                            text-light
+
+                            header_navbar_auth_logged_txt
+                        "
                             ng-cloak
                     >
                         You are logged in!
                         {{ loggedInUser }}
                     </div>
                     <button
-                            class="btn btn-outline btn-primary header_navbar_auth_logged_logout_btn"
+                            type="button"
+                            class="
+                                btn btn-outline btn-raised btn-primary
+                                border-2
+                                border-light
+                                bg-dark
+
+                                text-light
+
+                                header_navbar_auth_logged_logout_btn"
                             ng-click="authLogout()"
                     >
-                        <p>
+                        <p class="">
                             LOGOUT
                         </p>
                     </button>
@@ -884,7 +943,6 @@
     <container class="row" ng-controller="NotebookController">
         {% verbatim %}
 
-
             <div class="offset-2 offset-md-2 ninja_mark_login_ahoy"
                     ng-if="!loggedInUser"
             >
@@ -907,24 +965,67 @@
                 AYE AYE!
             </div>
 
-            <div class="bd-sidebar sidebar_navbar" ng-cloak ng-if="loggedInUser">
-                <div class=" sidebar_navbar_search">
+            <div
+                    class="
+                        bd-sidebar sidebar_navbar
+
+                    "
+                    ng-cloak ng-if="loggedInUser"
+            >
+                <div
+                        class="
+                            sidebar_navbar_search
+
+                        "
+                >
                     <button class="btn bmd-btn-icon" for="search" aria-expanded="false" >
                         <i class="material-icons">search</i>
                     </button>
                     <span>
-                        <input class="form-control" type="text" id="search" placeholder="Search">
+                        <input
+                                class="
+                                    form-control
+                                    sidebar_navbar_search_input
+                                "
+                                type="text" id="search" placeholder="Search">
                     </span>
                 </div>
-                <ul class="nav flex-column sidebar_navbar_notebooks">
-                    <li class="nav-item sidebar_navbar_notebooks_list"
+                <ul
+                        class="
+                            nav flex-column
+Z                            sidebar_navbar_notebooks
+                        "
+            >
+
+                    <li
+                            class="
+                                nav-item
+                                sidebar_navbar_notebooks_list
+                            "
                             ng-repeat="notebook in notebooksList">
-                        <a class="nav-link active" href="/notebook/{{ notebook.id }}/">
+                        <a
+                                class="
+                                    nav-link active
+                                    sidebar_navbar_notebooks_list_link
+                                "
+                           href="/notebook/{{ notebook.id }}/">
                             {{ notebook.title }}
                         </a>
                     </li>
                 </ul>
-                <button class="btn btn-outline btn-primary sidebar_navbar_create_notebook_btn"
+                <button
+                        class="
+                            btn btn-outline btn-primary
+
+                            border-2
+                            border-light
+                            bg-dark
+
+                            text-light
+
+                            sidebar_navbar_create_notebook_btn
+
+                        "
                         ng-click="createNotebook()"
                         type="button"
                 >
