@@ -474,7 +474,8 @@
 
     .sidebar_navbar {
         padding: 0 0 0 0.9em;
-        border-right: 1px solid rgba(0,0,0,.1);
+        {#border-right: 1px solid rgba(0,0,0,.1);#}
+        border-right: 1px solid #c0c5ce;
         top: 3em;
         height: calc(100vh - 3rem);
         position: sticky;
@@ -519,8 +520,10 @@
             }
 
         .sidebar_navbar_notebooks {
-            border-top: 1px solid rgba(0,0,0,.1);
-            border-bottom: 1px solid rgba(0,0,0,.1);
+            {#border-top: 1px solid rgba(0,0,0,.1);#}
+            {#border-bottom: 1px solid rgba(0,0,0,.1);#}
+            border-top: 1px solid #c0c5ce;
+            border-bottom: 1px solid #c0c5ce;
             bottom:0;
             {#max-height: calc(100% - 15em);#}
             max-height: calc(100% - 7em);
@@ -532,7 +535,7 @@
             .sidebar_navbar_notebooks_list {
                 padding:0;
                 width:100%;
-                background-color: #65737e;
+                background-color: #4f5b66;
             }
             .sidebar_navbar_notebooks_list_link {
                 color: #f5f5f5;
@@ -1046,3 +1049,76 @@ Z                            sidebar_navbar_notebooks
 {% block script %}{% endblock %}
 </body>
 </html>
+
+
+
+
+
+n = int(input())
+a = [int(i) for i in input().split()]
+
+a.sort()
+
+cursor = 0
+element = None
+element_qty = 0
+new_element = None
+new_element_qty = 0
+
+for i in a:
+    if new_element == i:
+        new_element_qty += 1
+    else:
+        new_element = i
+        new_element_qty = 1
+
+    if new_element_qty >= element_qty:
+        element = new_element
+        element_qty = new_element_qty
+
+print(element)
+
+
+
+
+
+
+
+
+
+n = 'Z123XY'
+
+string_lenth = len(n) - 1
+cursor = 0
+total_string_lenth = 0
+combination_lenth = '0'
+
+while string_lenth >= cursor:
+    if cursor:
+
+        if n[cursor].isdigit():
+            combination_lenth = combination_lenth + n[cursor]
+
+            if string_lenth == cursor:
+                total_string_lenth += int(combination_lenth)
+
+        if not n[cursor].isdigit():
+            total_string_lenth += int(combination_lenth)
+            combination_lenth = '0'
+
+        if not n[cursor].isdigit() and not n[cursor-1].isdigit():
+            total_string_lenth += 1
+        if string_lenth == cursor and not n[cursor].isdigit():
+            total_string_lenth += 1
+
+    cursor += 1
+
+print(total_string_lenth)
+
+
+
+
+
+
+
+
