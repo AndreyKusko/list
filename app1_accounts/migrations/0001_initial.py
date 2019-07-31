@@ -46,7 +46,6 @@ class Migration(migrations.Migration):
             name='Agreement',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('pdf', models.FileField(blank=True, null=True, upload_to=app1_accounts.models.upload_agreement_location)),
                 ('text', models.TextField(blank=True, null=True, verbose_name='Text')),
                 ('date', models.TextField(max_length=100, verbose_name='Date')),
             ],

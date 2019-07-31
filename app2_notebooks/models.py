@@ -32,7 +32,6 @@ class NotebookManager(models.Manager):
 
 class Notebook(models.Model):
     class Meta:
-        db_table = 'notebook'
         verbose_name_plural = '1 Notebook'
         verbose_name = 'Notebook'
 
@@ -67,30 +66,13 @@ class Notebook(models.Model):
         return [tag.title for tag in self.tags.all()]
 
 
-
-# class Paper(models.Model):
-#     class Meta:
-#         db_table = 'paper'
-#         verbose_name_plural = '1.1 Paper'
-#         verbose_name = 'Paper'
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,)
-#     notebook = models.ForeignKey(Notebook, null=True, on_delete=models.SET_NULL,)
-#
-#     ordering_number = models.IntegerField(verbose_name="_ordering_number", null=True, blank=True)
-#     title = models.CharField(max_length=100, verbose_name="Title", null=True, blank=True)
-#
-#     note = models.TextField(max_length=3000, verbose_name="Hidden note", null=True, blank=True)
-#     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-#     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-
-
 class NoteManager(models.Manager):
 
     def search(self, query=None):
         qs = self.get_queryset()
         if query is not None:
-            or_lookup = (Q(title__icontains=query) |
-                         Q(id=query)
+            or_lookup = (
+                Q(title__icontains=query) | Q(id=query)
             )
             qs = qs.filter(or_lookup).distinct()  # distinct() is often necessary with Q lookups
         return qs
@@ -98,7 +80,6 @@ class NoteManager(models.Manager):
 
 class Note(models.Model):
     class Meta:
-        db_table = 'note'
         verbose_name_plural = '1.1.1 Note'
         verbose_name = 'Note'
 
@@ -124,25 +105,8 @@ class Note(models.Model):
     objects = NoteManager()
 
 
-# class Clip(models.Model):
-#     class Meta:
-#         db_table = 'clip'
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,)
-#     notebook = models.ForeignKey(NoteBook, null=True, on_delete=models.SET_NULL,)
-#     title = models.CharField(max_length=500, verbose_name="Название")
-#     number = models.IntegerField(verbose_name="Номер", null=True, blank=True)
-#     hidden_note = models.TextField(max_length=3000, verbose_name="Скрытая заметка", null=True, blank=True)
-#     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-#     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-#
-#     def __unicode__(self):
-#         name = 123
-#         return name
-
-
 class Point(models.Model):
     class Meta:
-        db_table = 'point'
         verbose_name_plural = '1.1.2 Point'
         verbose_name = 'Point'
         ordering = ["user_id", "note", "is_crossed", "ordering_number", "title", "id"]
@@ -151,7 +115,6 @@ class Point(models.Model):
     ordering_number = models.IntegerField(verbose_name="Номер", null=True, blank=True)
     title = models.CharField(max_length=120, verbose_name="Название", null=True, blank=True)
 
-    # parent_point = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name='sub_points')
     parent_point = models.ForeignKey('Point', blank=True, null=True, on_delete=models.CASCADE, related_name='sub_points')
 
     text = models.TextField(default=False, max_length=3000, verbose_name="Текст", null=True, blank=True)
@@ -168,38 +131,3 @@ class Point(models.Model):
     def __str__(self):
         notebook = 'nbid=' + str(self.id) + ' | ' + str(self.title)
         return notebook
-
-
-# class PointAddition(models.Model):
-#     class Meta:
-#         db_table = 'point_addition'
-#         ordering = ["timestamp"]
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,)
-#     point = models.ForeignKey(Point, null=True, on_delete=models.SET_NULL,)
-#     order_number = models.IntegerField(default="0", verbose_name="Номер", null=True, blank=True,)
-#
-#     title = models.CharField(max_length=120, verbose_name="Название", null=True, blank=True)
-#     number = models.IntegerField(verbose_name="Номер", null=True, blank=True)
-#     text = models.TextField(default=False, max_length=3000, verbose_name="Текст", null=True, blank=True)
-#
-#     data_new_point_new_add = models.IntegerField(default="0", verbose_name="Номер", null=True, blank=True)
-#     hidden_note = models.TextField(max_length=3000, verbose_name="Скрытая заметка", null=True, blank=True)
-#     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-#     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-#
-#     def __unicode__(self):
-#         if self.user.every.name:
-#             b = 'biz' + ' ' + self.user.every.name
-#         else:
-#             b = 'person' + ' ' + self.user.every.person_name
-#         if self.number:
-#             n = str(self.number)
-#         else:
-#             n = ''
-#         if self.title:
-#             t = self.title
-#         else:
-#             t = ''
-#         name = b + str(self.user.id) + ' | ' + n + ' | ' + t
-#
-#         return name

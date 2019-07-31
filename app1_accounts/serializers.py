@@ -20,10 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, data):
-        user_obj = None
         username = data.get("username")
         email = data.get("username").lower()
-        password = data["password"]
+        # password = data["password"]
         if User.objects.filter(email=username).exists():
             raise ValueError("Email %s is already registered" % email)
         return data

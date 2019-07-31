@@ -11,7 +11,6 @@ User = get_user_model()
 def home(request):
     if request.user.is_authenticated:
         library, created = Library.objects.get_or_create(user=request.user)
-        # Note.objects.all().delete()
         notebooks = Notebook.objects.filter(library=library)
         context = {
             "library": library,
@@ -23,9 +22,8 @@ def home(request):
 
 
 def notebook(request, notebook_id):
-    notebook = Notebook.objects.get(id=notebook_id)
     context = {
-        'notebook': notebook,
+        'notebook': Notebook.objects.get(id=notebook_id),
     }
     return render(request, "notebook.html", context)
 
@@ -38,7 +36,7 @@ class NotebookApiView(viewsets.ModelViewSet):
     queryset = Notebook.objects.all()
 
     def list(self, request):
-        queryset = self.model.objects.filter(user=request.user, is_deleted=False)
+        queryset = self.queryset.filter(user=request.user, is_deleted=False)
         notebook_id = request.query_params.get('id', None)
         if notebook_id:
             queryset = get_object_or_404(self.model, id=request.query_params['id'])
@@ -55,7 +53,8 @@ class NotebookApiView(viewsets.ModelViewSet):
                 user=user,
                 library_id=library_id,
                 title=notebooks_qty+1,
-                ordering_number=notebooks_qty+1)
+                ordering_number=notebooks_qty+1
+            )
             serializer = self.serializer_class(queryset, many=False)
             return Response(serializer.data)
 
@@ -72,7 +71,6 @@ class NotebookApiView(viewsets.ModelViewSet):
             serializer = self.serializer_class(model, many=False)
             return Response(serializer.data)
         else:
-            # qwe = self.model.__name__
             raise ValueError('Notebook id required')
 
     def destroy(self, request, *args, **kwargs):
@@ -118,7 +116,7 @@ class NoteApiView(viewsets.ModelViewSet):
                 model.is_note = is_note
 
             title = request.data.get('title', '')
-            ck_text = request.data.get('ck_text', '')
+            # ck_text = request.data.get('ck_text', '')
             text = request.data.get('text', '')
             if title and is_list and not is_note:
                 model.title = title
@@ -155,7 +153,6 @@ class NoteApiView(viewsets.ModelViewSet):
             serializer = self.serializer_class(model, many=False)
             return Response(serializer.data)
         else:
-            qwe = self.model.__name__
             raise ValueError('Notebook id required')
 
     def delete(self, request):
@@ -212,6 +209,7 @@ class PointApiView(viewsets.ModelViewSet):
         if model_id:
             model = get_object_or_404(self.model, id=model_id, user=request.user)
 
+            # todo: strange construction with none and if make it siply
             title = request.data.get('title', None)
             if title:
                 model.title = title

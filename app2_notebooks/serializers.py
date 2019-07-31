@@ -21,13 +21,6 @@ class NoteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class PointSerializer(serializers.ModelSerializer):
-#
-#     class Meta
-#         model = Point
-#         fields = '__all__'
-
-
 class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
@@ -44,59 +37,6 @@ class PointSerializer(serializers.ModelSerializer):
         )
         return serializer.data
 
-    # def get_fields(self):
-    #     fields = super(PointSerializer, self).get_fields()
-    #     fields['sub_points'] = PointSerializer(instance=Point.objects.filter(is_deleted=False), many=True)
-    #     return fields
 
 
 
-
-# class SubPointSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Point
-#         fields = ('name', 'description')
-#
-#
-# class PointSerializer(serializers.ModelSerializer):
-#     parent_point = serializers.PrimaryKeyRelatedField()
-#     sub_points = serializers.SubPointSerializer()
-#
-#     class Meta:
-#         model = Point
-#         fields = (
-#             'note',
-#             'ordering_number',
-#             'title',
-#             'parent_point'
-#             'text'
-#             'is_active'
-#             'is_crossed'
-#             'updated'
-#             'timestamp'
-#         )
-
-
-# class PointSerializer(serializers.ModelSerializer):
-#     parent_point = serializers.PrimaryKeyRelatedField()
-#
-#     class Meta:
-#         model = Point
-#         fields = (
-#             'note',
-#             'ordering_number',
-#             'title',
-#             'parent_point'
-#             'text'
-#             'is_active'
-#             'is_crossed'
-#             'updated'
-#             'timestamp'
-#         )
-#
-#         def get_related_field(self, model_field):
-#             # Handles initializing the `subcategories` field
-#             return PointSerializer()
-#
-#
-# PointSerializer.base_fields['subpoints'] = PointSerializer()
