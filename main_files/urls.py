@@ -34,7 +34,6 @@ urlpatterns = [
     url(r'^$', home, name='home'),
 ]
 
-# urlpatterns += router.urls
 urlpatterns += staticfiles_urlpatterns()
 
 

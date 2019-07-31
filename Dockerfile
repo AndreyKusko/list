@@ -6,5 +6,3 @@ ADD requirements.txt /code/
 RUN pip install -r requirements.txt
 RUN ./manage.py migrate
 ADD . /code/
-
-
