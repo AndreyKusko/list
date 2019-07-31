@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework import serializers
+
 from django.contrib.auth import get_user_model
-from .models import Library
+from rest_framework import serializers
+
+from app1_accounts import models as app1_models
 
 User = get_user_model()
 
@@ -77,5 +79,5 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class LibrarySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Library
+        model = app1_models.Library
         fields = '__all__'

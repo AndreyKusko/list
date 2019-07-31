@@ -1,17 +1,23 @@
 
 from django.contrib.auth import get_user_model
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import viewsets
-from .serializers import *
+
+from app2_notebooks import (
+    models as app2_models,
+    serializers as app2_serializers,
+
+)
+
 User = get_user_model()
 
 
 def home(request):
     if request.user.is_authenticated:
-        library, created = Library.objects.get_or_create(user=request.user)
-        notebooks = Notebook.objects.filter(library=library)
+        library, created = app2_models.Library.objects.get_or_create(user=request.user)
+        notebooks = app2_models.Notebook.objects.filter(library=library)
         context = {
             "library": library,
             "notebooks": notebooks,
@@ -23,17 +29,17 @@ def home(request):
 
 def notebook(request, notebook_id):
     context = {
-        'notebook': Notebook.objects.get(id=notebook_id),
+        'notebook': app2_models.Notebook.objects.get(id=notebook_id),
     }
     return render(request, "notebook.html", context)
 
 
 class NotebookApiView(viewsets.ModelViewSet):
-    model = Notebook
+    model = app2_models.Notebook
     permission_classes = [IsAuthenticated]
     allowed_methods = ['PUT', 'PATCH', 'GET', 'DELETE']
-    serializer_class = NotebookSerializer
-    queryset = Notebook.objects.all()
+    serializer_class = app2_serializers.NotebookSerializer
+    queryset = app2_models.Notebook.objects.all()
 
     def list(self, request):
         queryset = self.queryset.filter(user=request.user, is_deleted=False)
@@ -84,11 +90,11 @@ class NotebookApiView(viewsets.ModelViewSet):
 
 
 class NoteApiView(viewsets.ModelViewSet):
-    model = Note
+    model = app2_models.Note
     permission_classes = [IsAuthenticated]
     allowed_methods = ['PUT', 'PATCH', 'GET', 'DELETE']
-    serializer_class = NoteSerializer
-    queryset = Note.objects.all()
+    serializer_class = app2_serializers.NoteSerializer
+    queryset = app2_models.Note.objects.all()
 
     def list(self, request):
         notebook_id = request.query_params.get('notebook_id', None)
@@ -106,7 +112,7 @@ class NoteApiView(viewsets.ModelViewSet):
         if notebook_id:
             model = self.model()
             model.user = user
-            model.notebook = get_object_or_404(Notebook, id=notebook_id, user=request.user)
+            model.notebook = get_object_or_404(app2_models.Notebook, id=notebook_id, user=request.user)
 
             is_list = request.data.get('is_list', False)
             is_note = request.data.get('is_note', False)
@@ -161,11 +167,11 @@ class NoteApiView(viewsets.ModelViewSet):
 
 
 class PointApiView(viewsets.ModelViewSet):
-    model = Point
+    model = app2_models.Point
     permission_classes = [IsAuthenticated]
     allowed_methods = ['PUT', 'PATCH', 'GET', 'DELETE']
-    serializer_class = PointSerializer
-    queryset = Point.objects.all()
+    serializer_class = app2_serializers.PointSerializer
+    queryset = app2_models.Point.objects.all()
 
     @classmethod
     def get_extra_actions(cls):
@@ -195,7 +201,7 @@ class PointApiView(viewsets.ModelViewSet):
             raise ValueError('title required')
         model.title = request.data.get('title')
         if point_id:
-            model.parent_point = Point.objects.get(id=point_id)
+            model.parent_point = app2_models.Point.objects.get(id=point_id)
         model.text = request.data.get('text', '')
         model.active = request.data.get('active', True)
         model.hidden_note = request.data.get('hidden_note', '')

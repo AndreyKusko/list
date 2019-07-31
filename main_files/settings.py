@@ -3,7 +3,6 @@ import os
 
 from .secret_settings import *
 
-
 if SERVER == 'LOCAL':
     DEBUG = True
     HOST = 'http://localhost:8000'

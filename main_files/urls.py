@@ -1,16 +1,15 @@
 from django.conf import settings
 from django.conf.urls import include, url
-from django.contrib import admin
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
-from .views import apple_touch_icon
 from app1_accounts.views import LibraryApiView, UserAPIView
 from app2_notebooks.views import *
 
-from rest_framework import routers
-
+from .views import apple_touch_icon
 
 router = routers.SimpleRouter()
 router.register(r'points', PointApiView)

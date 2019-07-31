@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework import serializers
+
 from django.contrib.auth import get_user_model
-from .models import *
+from rest_framework import serializers
+
+from app2_notebooks import models as app2_models
 
 User = get_user_model()
 
@@ -10,20 +12,20 @@ User = get_user_model()
 class NotebookSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Notebook
+        model = app2_models.Notebook
         fields = '__all__'
 
 
 class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Note
+        model = app2_models.Note
         fields = '__all__'
 
 
 class PointSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Point
+        model = app2_models.Point
         fields = '__all__'
     #
     sub_points = serializers.SerializerMethodField(
@@ -36,7 +38,3 @@ class PointSerializer(serializers.ModelSerializer):
             many=True
         )
         return serializer.data
-
-
-
-
