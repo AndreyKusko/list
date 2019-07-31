@@ -10,4 +10,4 @@ wsgi.py
 env/
 media/
 scripts/
-experiments.py
+experiments.txt
