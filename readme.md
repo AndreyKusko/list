@@ -9,7 +9,7 @@ http://markninja.ru/
 
     cd /root/list/
     source /root/list/env/bin/activate
-    nano /root/list/docker-compos``e.yml
+    nano /root/list/docker-compose.yml
     nano /root/list/Dockerfile
     nano /root/list/main_files/urls.py
     nano /root/list/main_files/secret_settings.py
@@ -34,7 +34,7 @@ git clone git@gitlab.com:Kusko/list.git
 
 ### Create PostgreSQL Database and User (battle server only)
 
-**TOP SECRET**
+    **TOP SECRET**
 
 
 ### Create a Python Virtual Environment for your Project
@@ -151,8 +151,7 @@ Start Nginx
 
 
 ### Supervisord (battle server only)
-    cd /root/list
-    source /root/list/env/bin/activate
+    deactivate
     apt-get install supervisor
     service --status-all | grep super
     >>> [ + ] supervisor
