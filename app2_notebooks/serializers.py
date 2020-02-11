@@ -27,7 +27,7 @@ class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = app2_models.Point
         fields = '__all__'
-    #
+
     sub_points = serializers.SerializerMethodField(
         read_only=True, method_name="get_child_points")
 

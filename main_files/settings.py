@@ -10,11 +10,11 @@ if SERVER == 'LOCAL':
     cron_logs_file = '/Users/Andrew/w_projects/test/logs/cron.log'
 else:
     DEBUG = True
-    HOST = 'http://asphere.online'
-    PROJECT_PATH = '/root/asphere/'
-    logs_file = '/root/test/logs/server_logs.log'
-    request_logs_file = '/root/test/logs/server_django_request.log'
-    cron_logs_file = '/root/test/logs/server_cron.log'
+    HOST = 'http://markninja.ru'
+    PROJECT_PATH = '/root/list/'
+    logs_file = '/root/list/logs/server_logs.log'
+    request_logs_file = '/root/list/logs/server_django_request.log'
+    cron_logs_file = '/root/list/logs/server_cron.log'
 
 
 INSTALLED_APPS = [
@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    # 'rest_framework_jwt',
     'app1_accounts',
     'app2_notebooks',
 
@@ -100,7 +99,6 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',

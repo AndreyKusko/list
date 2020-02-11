@@ -12,9 +12,7 @@ class NotebookManager(models.Manager):
     def search(self, query=None):
         qs = self.get_queryset()
         if query is not None:
-            or_lookup = (Q(title__icontains=query) |
-                         Q(id=query)
-            )
+            or_lookup = (Q(title__icontains=query) | Q(id=query))
             qs = qs.filter(or_lookup).distinct()  # distinct() is often necessary with Q lookups
         return qs
 
@@ -35,20 +33,13 @@ class Notebook(models.Model):
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
-    # objects = NotebookManager()
-
-    # def __str__(self):
-    #     library = 'lid=' + str(self.library.id) + ' | '
-    #     notebook = 'nbid=' + str(self.id) + ' | ' + str(self.title)
-    #     return library + notebook
-        # return notebook
-
     def __str__(self):
         return self.title
 
     @property
     def tags_indexing(self):
-        """Tags for indexing.
+        """
+        Tags for indexing.
 
         Used in Elasticsearch indexing.
         """
@@ -68,6 +59,7 @@ class NoteManager(models.Manager):
 
 
 class Note(models.Model):
+
     class Meta:
         verbose_name_plural = '1.1.1 Note'
         verbose_name = 'Note'

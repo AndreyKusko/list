@@ -26,10 +26,10 @@ class UserAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         user = User.objects.get(username=request.data['username'])
-        if user.check_password(request.data['password']):
-            data = {'token': app1_utils.get_token(user)}
-            return Response(data=data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        if not user.check_password(request.data['password']):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        data = {'token': app1_utils.get_token(user)}
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class LibraryApiView(APIView):

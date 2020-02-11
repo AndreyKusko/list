@@ -30,10 +30,12 @@ class AccountUserManager(UserManager):
             raise ValueError('The given username must be set')
 
         email = self.normalize_email(email)
-        user = self.model(username=email, email=email,
-                          is_staff=is_staff, is_active=True,
-                          is_superuser=is_superuser,
-                          date_joined=now,)
+        user = self.model(
+            username=email, email=email,
+            is_staff=is_staff, is_active=True,
+            is_superuser=is_superuser,
+            date_joined=now
+        )
         user.set_password(password)
         user.save(using=self._db)
 
@@ -47,7 +49,6 @@ class User(AbstractUser):
 
 
 class Library(HiddenNoteModel):
-
     user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="User", null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100, null=True, blank=True, verbose_name="Title")
 

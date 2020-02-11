@@ -21,8 +21,7 @@ http://markninja.ru/
 
 # Разворачивание проекта
 
-git clone git@gitlab.com:Kusko/list.git
-
+git clone git@gitlab.com:AndreyKusko/list.git
 
 # Запуск сервера
 
@@ -103,6 +102,33 @@ deactivate
 cd /etc/nginx/sites-available
 
 sudo nano /etc/nginx/sites-available/list
+    
+    upstream markninja.ru {
+        server localhost:8000 fail_timeout=0;
+    }
+    server {
+        listen 80;
+        server_name www.markninja.ru;
+        return 301 http://markninja.ru$request_uri;
+    }
+    server {
+        listen 80;
+        server_name markninja.ru;
+        location ^/static/ {
+            root /opt/list/;
+            autoindex on;
+        }
+        location /media/ {
+            root /opt/list/;
+        }
+        location / {
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_redirect off;
+            proxy_pass http://markninja.ru;
+        }
+    }
+
+
 
     upstream 95.213.191.108 {
         server localhost:8000 fail_timeout=0;
@@ -169,3 +195,5 @@ supervisorctl update
 
 
 ### CONGRATS YOU CAN START!
+
+

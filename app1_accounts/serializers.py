@@ -15,16 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            'username',
-            'password',
-        ]
+        fields = ['username', 'password']
         extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, data):
         username = data.get("username")
         email = data.get("username").lower()
-        # password = data["password"]
         if User.objects.filter(email=username).exists():
             raise ValueError("Email %s is already registered" % email)
         return data
@@ -46,15 +42,8 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            'username',
-            'email',
-            'password',
-            'token',
-        ]
-        extra_kwargs = {"password": {
-            "write_only": True
-        }}
+        fields = ['username', 'email', 'password', 'token']
+        extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, data):
         user_obj = None
